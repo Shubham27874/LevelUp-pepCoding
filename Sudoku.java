@@ -71,7 +71,7 @@ public class Sudoku {
 
 
 
-    //WordBreak - 1
+    //WordBreak - 1----------------------------x-----------------------------x------------------------------------x-----------------x---
     public static void wordBreak(String str, String ans, HashSet < String > dict) {
         if(str.length() == 0){
             System.out.println(ans);
@@ -86,6 +86,7 @@ public class Sudoku {
             }}
         }
     
+    //CrossWord Puzzle - 1 ----------------x------------------------------x----------------------x-------------------------------------
     public static boolean isPossibletoPlaceH(int r, int c, String word){
 
         return true;
