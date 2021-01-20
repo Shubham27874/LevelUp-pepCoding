@@ -1,6 +1,9 @@
 import java.util.*;
+//import java.lang.*;
 
 public class Sudoku {
+    // Sudoku -
+    // 1--------------------x-------------------------------------x---------------------x-------------------------------x------------
     static int[][] board = { { 3, 0, 0, 0, 0, 0, 0, 0, 0 }, { 5, 2, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 8, 7, 0, 0, 0, 0, 3, 1 }, { 0, 0, 3, 0, 1, 0, 0, 8, 0 }, { 9, 0, 0, 8, 6, 3, 0, 0, 5 },
             { 0, 5, 0, 0, 9, 0, 6, 0, 0 }, { 1, 3, 0, 0, 0, 0, 2, 5, 0 }, { 0, 0, 0, 0, 0, 0, 0, 7, 4 },
@@ -8,13 +11,14 @@ public class Sudoku {
 
     
     public static void display(){
-        for (int[] ar : board) {
-            for (int ele : ar) {
+        for (int[] ar : board) 
+        {
+            for (int ele : ar) 
+            {
                 System.out.println(ele + " ");
             }
             System.out.println();
         }
-        
     }
 
     public static boolean isSafeToplace(int r, int c, int num) {
@@ -69,6 +73,34 @@ public class Sudoku {
         return res;
     }
 
+    public static boolean sudokuSolver02(ArrayList<Integer> loc, int idx){
+        if(idx == loc.size()){
+            display();
+            return true;
+        }
+
+        int r = loc.get(idx) / board[0].length;
+        int c = loc.get(idx) % board[0].length;
+        boolean res = false;
+        //int count = 0;
+
+        /*if(board[r][c] != 0){
+            return sudokuSolver01(idx + 1);
+        }*/
+
+        for(int num = 1; num <= 9; num++)
+        {
+            if(isSafeToplace(r, c, num))
+            {
+                board[r][c] = num;
+                res = res || sudokuSolver01(idx + 1);
+                board[r][c] = 0;
+            }
+        }
+
+        return res;
+    }
+
 
 
     //WordBreak - 1----------------------------x-----------------------------x------------------------------------x-----------------x---
@@ -87,13 +119,22 @@ public class Sudoku {
         }
     
     //CrossWord Puzzle - 1 ----------------x------------------------------x----------------------x-------------------------------------
-    public static boolean isPossibletoPlaceH(int r, int c, String word){
+    public static boolean isPossibletoPlaceH(char[][] arr, int r, int c, String word){
+        for(int i = 0; i < word.length(); i++){
+            if(c + i >= arr[0].length){
+                return false;
+            }
+
+            if( arr[r][c + i] != '-' && arr[r][c + i] != word.charAt(i)){
+                return false;
+            }
+        }
 
         return true;
     }
 
     public static boolean[] placeH(char[][] arr, int r, int c, String word){
-        boolean[] charLoc = new boolean[26];
+        boolean[] charLoc = new boolean[26]; // jo word maine place kiye hai unke liye, taki agar poland ke 'l' pe lhasa place krne gaye aur unplace karte waqt 'l' unplace na karde poland se.
         for(int i = 0; i < word.length(); i++){
             if(arr[r][c + i] == '-'){
                 charLoc[i] = true;
@@ -112,8 +153,16 @@ public class Sudoku {
         }
     }
 
-    public static boolean isPossibletoPlaceV(int r, int c, String word){
+    public static boolean isPossibletoPlaceV(char[][] arr, int r, int c, String word){
+        for(int i = 0; i < word.length(); i++){
+            if(r + i >= arr[0].length){
+                return false;
+            }
 
+            if( arr[r + i][c] != '-' && arr[r + i][c] != word.charAt(i)){
+                return false;
+            }
+        }
         return true;
     }
 
@@ -160,13 +209,13 @@ public class Sudoku {
             for(int c = 0; c < arr[0].length; c++){
                 if(arr[r][c] == '-' || arr[r][c] == word.charAt(0)){
 
-                    if(isPossibletoPlaceH(r, c, word)){
+                    if(isPossibletoPlaceH(arr,r, c, word)){
                         boolean[] charLoc = placeH(arr, r, c, word);
                         count += crossWord(arr, words, vidx + 1);
                         unplaceH(arr, r, c, word, charLoc);
                     }
 
-                    if(isPossibletoPlaceV(r, c, word)){
+                    if(isPossibletoPlaceV(arr, r, c, word)){
                         boolean[] charLoc = placeV(arr, r, c, word);
                         count += crossWord(arr, words, vidx + 1);
                         unplaceV(arr, r, c, word, charLoc);
@@ -179,7 +228,21 @@ public class Sudoku {
     }
 
     public static void main(String args[]){
-        System.out.println(sudokuSolver01(0));
+        //System.out.println(sudokuSolver01(0));
+        
+        int n = board.length;
+        int m = board[0].length;
+        ArrayList<Integer> loc = new ArrayList<>();
+
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(board[i][j] == 0)
+                loc.add(i * m + j);
+            }
+        }
+
+        System.out.println(sudokuSolver02(loc, 0));
+
     }
 
 }
