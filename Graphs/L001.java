@@ -1,15 +1,7 @@
 //20th Feb 2021
 import java.util.*;
-import java.lang.*;
-import java.nio.file.Path;
 
-public class L001 {
-    public static void main(String[] args){
-        constructGraph();
-        display();
-        boolean[] vis = new boolean[N];
-        System.out.println(printAllPath(0, 6, vis, ""));
-    }
+public class l001 {
 
     public static class Edge {
         int v = 0;
@@ -148,5 +140,10 @@ public class L001 {
         addEdge(5, 6, 3);
     }
 
-    
+    public static void main(String[] args){
+        constructGraph();
+        display();
+        boolean[] vis = new boolean[N];
+        System.out.println(printAllPath(0, 6, vis, ""));
+    }
 }
