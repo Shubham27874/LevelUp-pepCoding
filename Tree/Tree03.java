@@ -1,7 +1,5 @@
 import java.util.LinkedList;
 
-import javax.swing.plaf.synth.SynthSpinnerUI;
-
 public class Tree03 {
     public class TreeNode {
         int val;
@@ -69,7 +67,7 @@ public class Tree03 {
         int level = 0;
         System.out.println("Level" + level + " : ");
 
-        while(que.size != 1){
+        while(que.size() != 1){
             TreeNode rn = que.removeFirst();
             System.out.println(rn.val + " ");
 
@@ -87,7 +85,34 @@ public class Tree03 {
         }
     }
 
-    
+    public static void levelOrderLineWise_03(TreeNode root){
+        LinkedList<TreeNode> que = new LinkedList<>();
+
+        que.addLast(root);
+
+        int level = 0;
+
+        while(que.size() != 0){
+            int size = que.size();
+            System.out.println("Level" + level + " : ");
+
+            while(size-- > 0){
+                TreeNode rn = que.removeFirst();
+                System.out.println(rn.val + " ");
+
+                if(rn.left != null)
+                    que.addLast(rn.left);
+                    
+                if(rn.right != null)
+                    que.addLast(rn.right);
+            }
+
+            level++;
+            System.out.println();
+        }
+    }
+
+
 
     public static void main(String[] args){
 
