@@ -138,12 +138,41 @@ public class l001 {
         addEdge(4, 5, 2);
         addEdge(4, 6, 8);
         addEdge(5, 6, 3);
+
+        addEdge(6, 0, 3);
+    }
+
+    public static int hamiltonianCycleandPath(int src, int osrc, boolean[] vis, String psf, int totalNoedges){
+        if(totalNoedges == N - 1){
+            int idx = findEdge(osrc, src);
+            if(idx != -1)
+                System.out.println("Cycle: " + psf + src);
+            else
+                System.out.println("Path: " + psf + src);
+                System.out.println();
+        }
+        
+        int count = 0;
+        vis[scr] = true;
+        for(Edge e : graph[src]){
+            if(!vis[e.v]){
+                count += hamiltonianCycleandPath(e.v, osrc, vis, psf + src + " ", totalNoedges + 1);
+            }
+        }
+        vis[src] = false;
+        return count;
+    }
+
+    public static void hamiltonianCycleandPath(int src){
+        boolean[] vis = new boolean[N];
+        hamiltonianCycleandPath(0, 0, vis, " ", 0);
     }
 
     public static void main(String[] args){
         constructGraph();
-        display();
-        boolean[] vis = new boolean[N];
-        System.out.println(printAllPath(0, 6, vis, ""));
+        //display();
+        //boolean[] vis = new boolean[N];
+        //System.out.println(printAllPath(0, 6, vis, ""));
+        hamiltonianCycleandPath(0);
     }
 }
