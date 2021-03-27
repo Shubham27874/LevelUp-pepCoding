@@ -1,6 +1,19 @@
 import java.util.*;
 
 public class DP02 {
+    public static void print1D(int[] arr){
+        for(int ele : arr){
+            System.out.print(ele + " ");
+        }
+        System.out.println();
+    }
+
+    public static void print2D(int[][] arr){
+        for(int[] row : arr){
+            print1D(row);
+        }
+    }
+      
     // Leetcode 70
     public static int climbStairs_memo(int n, int[] dp) {
         if(n <= 1){
