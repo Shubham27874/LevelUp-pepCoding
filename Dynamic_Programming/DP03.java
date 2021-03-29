@@ -1,3 +1,3 @@
-public static class DP03 {
+public class DP03 {
     
 }

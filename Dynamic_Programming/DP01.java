@@ -32,7 +32,7 @@ public class DP01 {
         return dp[n] = ans;
     }
 
-    public static int fib_DP_tabulation(int n, int[] dp){
+    public static int fib_DP_tabulation(int N, int[] dp){
         for(int i = 0; i < N; i++){
             if(i <= 1){
                 dp[i] = i;
@@ -44,7 +44,7 @@ public class DP01 {
             dp[i] = ans;
         }
 
-        return dp[n];
+        return dp[N];
     }
 
     public static int fib_twoPointer(int n){
