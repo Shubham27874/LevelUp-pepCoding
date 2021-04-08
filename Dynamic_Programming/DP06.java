@@ -164,18 +164,101 @@ public class DP06 {
     }
 
     //LBS_upHill
+    // https://practice.geeksforgeeks.org/problems/longest-bitonic-subsequence0824/1
     public static int LongestBitonicSequence(int[] nums) {
         int[] LIS = LIS_LR(nums);
         int[] LDS = LIS_RL(nums);
 
         int len = 0;
-        for(int i = 0; i < arr.length; i++) {
+        for(int i = 0; i < nums.length; i++) {
             len = Math.max(len, LIS[i] + LDS[i] - 1);
         }
 
         return len;
     }
 
+    public static int[] LDS_LR(int[] arr) {
+        int n = arr.length;
+        int[] dp = new int[n];
+        int len = 0;
+        for (int i = 0; i < n; i++) {
+            dp[i] = 1;
+            for (int j = i - 1; j >= 0; j--) {
+                if (arr[j] > arr[i]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+
+            len = Math.max(len, dp[i]);
+        }
+
+        return dp;
+    }
+
+    public static int[] LDS_RL(int[] arr) {
+        int n = arr.length;
+        int[] dp = new int[n];
+        int len = 0;
+        for (int i = n - 1; i >= 0; i--) {
+            dp[i] = 1;
+            for (int j = i + 1; j < n; j++) {
+                if (arr[j] > arr[i]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+
+            len = Math.max(len, dp[i]);
+        }
+
+        return dp;
+    }
+
+    public static int LBS_downhill(int[] arr) {
+        int[] LDS = LDS_LR(arr);
+        int[] LIS = LDS_RL(arr);
+
+        int len = 0;
+        for (int i = 0; i < arr.length; i++) {
+            len = Math.max(len, LDS[i] + LIS[i] - 1);
+        }
+
+        return len;
+    }
+
+    // Leetcode 673
+    public int findNumberOfLIS(int[] arr) {
+        int n = arr.length;
+        int[] dp = new int[n];
+        int[] count = new int[n];
+
+        int maxLen = 0;
+        int maxCount = 0;
+
+        for (int i = 0; i < n; i++) {
+            dp[i] = 1;
+            count[i] = 1;
+            for (int j = i - 1; j >= 0; j--) {
+                if (arr[j] < arr[i]) {
+                    if (dp[j] + 1 > dp[i]) {
+                        dp[i] = dp[j] + 1;
+                        count[i] = count[j];
+                    } else if (dp[j] + 1 == dp[i]) {
+                        count[i] += count[j];
+                    }
+                }
+            }
+
+            if (dp[i] > maxLen) {
+                maxLen = dp[i];
+                maxCount = count[i];
+            } else if (maxLen == dp[i]) {
+                maxCount += count[i];
+            }
+        }
+
+        return maxCount;
+    }
+    
 
 }
 
