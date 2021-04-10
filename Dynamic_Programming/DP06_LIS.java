@@ -1,11 +1,12 @@
 import java.util.*;
+import java.lang.*;
 
-public class DP06 {
+public class DP06_LIS {
     //https://practice.geeksforgeeks.org/problems/count-palindromic-subsequences/1
     //Longest Palindromic Subsequences
 
-    int mod = (int)1e9 + 7;
-    long countPS(String str,int i, int j, long[][] dp)
+    static int mod = (int)1e9 + 7;
+    public static long countPS(String str,int i, int j, long[][] dp)
     {
         if(i >= j)
             return dp[i][j] = (i == j) ? 1 : 0;
@@ -20,7 +21,7 @@ public class DP06 {
         return dp[i][j] = ((str.charAt(i) != str.charAt(j)) ? a + b - c + mod : a + b + 1 % mod) % mod;
     }
     
-    long countPS(String str)
+    public static long countPS(String str)
     {
         int n = str.length();
         long[][] dp = new long[n][n];
@@ -259,6 +260,74 @@ public class DP06 {
         return maxCount;
     }
     
+    //Alternate Solution(Graph_DFS)
+    public void allLIS(ArrayList<ArrayList<Integer>> mapping, int[] arr, int idx, int len, String ans) {
+        if (len == 1) {
+            System.out.println(ans + arr[idx]);
+            return;
+        }
+
+        for (Integer i : mapping.get(len - 1)) {
+            if (i < idx && arr[i] < arr[idx]) {
+                allLIS(mapping, arr, i, len - 1, ans + arr[idx] + ", ");
+            }
+        }
+    }
+
+    public void findAllLIS(int[] arr) {
+        int n = arr.length;
+        int[] dp = new int[n];
+        int len = 0;
+        for (int i = 0; i < n; i++) {
+            dp[i] = 1;
+            for (int j = i - 1; j >= 0; j--) {
+                if (arr[j] < arr[i]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+
+            len = Math.max(len, dp[i]);
+        }
+
+        ArrayList<ArrayList<Integer>> mapping = new ArrayList<>();
+        for (int i = 0; i <= len; i++)
+            mapping.add(new ArrayList<>());
+
+        for (int i = 0; i < n; i++) {
+            mapping.get(dp[i]).add(i);
+        }
+
+        for (Integer i : mapping.get(len)) {
+            allLIS(mapping, arr, i, len, "");
+        }
+    }
+
+    // https://www.geeksforgeeks.org/dynamic-programming-building-bridges/
+    // {{sp1,ep1},{sp2,ep2}.....}
+    public static int buildingBridges(int[][] arr) {
+        Arrays.sort(arr, (a, b) -> {
+            return a[0] - b[0]; // this - other, default behaviour.
+            // return b[0] - a[0]; // other - this, reverse default behaviour.
+        });
+
+        int n = arr.length;
+        int[] dp = new int[n];
+        int len = 0;
+        for (int i = 0; i < n; i++) {
+            dp[i] = 1;
+            for (int j = i - 1; j >= 0; j--) {
+                if (arr[j][0] < arr[i][0] && arr[j][1] < arr[i][1]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+
+            len = Math.max(len, dp[i]);
+        }
+
+        return len;
+    }
+
+    // Leetcode 354
 
 }
 
