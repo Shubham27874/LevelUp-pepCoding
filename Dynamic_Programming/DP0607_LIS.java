@@ -1,7 +1,7 @@
 import java.util.*;
-import java.lang.*;
+//import java.lang.*;
 
-public class DP06_LIS {
+public class DP0607_LIS {
     //https://practice.geeksforgeeks.org/problems/count-palindromic-subsequences/1
     //Longest Palindromic Subsequences
 
