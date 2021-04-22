@@ -125,6 +125,51 @@ public class DP08 {
         return ans != (int)1e8 ? ans : -1;
     }
 
+    // https://www.geeksforgeeks.org/find-number-of-solutions-of-a-linear-equation-of-n-variables/
+    public static int numberOfSolution(int[] arr, int Tar) {
+        int[] dp = new int[Tar + 1];
+
+        for (int tar = 0; tar <= Tar; tar++) {
+            for (int ele : arr) {
+                if (tar - ele >= 0)
+                    dp[tar] += dp[tar - ele];
+            }
+        }
+
+        return dp[Tar];
+    }
+
+    public static int numberOfSolution(int[] arr, int Tar, int aTar, int idx, int[] coff) {
+        if (Tar == 0) {
+            for (int i = 0; i < arr.length; i++) {
+                System.out.print(arr[i] + "(" + coff[i] + ")");
+                if (i != arr.length - 1)
+                    System.out.print(" + ");
+            }
+
+            System.out.println(" = " + aTar);
+
+            return 1;
+        }
+
+        int count = 0;
+        for (int i = idx; i < arr.length; i++) {
+            if (Tar - arr[i] >= 0) {
+                coff[i]++;
+                count += numberOfSolution(arr, Tar - arr[i], aTar, i, coff);
+                coff[i]--;
+            }
+        }
+
+        return count;
+    }
+
+    public static void numberOfSolution() {
+        int[] arr = { 2, 3, 5, 7 };
+        int tar = 10;
+        System.out.println(numberOfSolution(arr, tar, tar, 0, new int[arr.length]));
+    }
+
 
     public static void main(String[] args){
         
