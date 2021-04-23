@@ -165,6 +165,104 @@ public class DP09 {
         return ans;
     }
 
+    // https://www.geeksforgeeks.org/0-1-knapsack-problem-dp-10/
+    public static int knapSack(int W, int wt[], int val[], int n, int[][] dp) { 
+        if(n == 0 || W == 0){
+            return dp[n][W] = 0;
+        }
+
+        if(dp[n][W] != 0){
+            return dp[n][W];
+        }
+
+        int maxCost = 0;
+        if(W - wt[n - 1] >= 0)
+            maxCost = knapSack(W - wt[n - 1], wt, val, n - 1, dp) + val[n - 1];
+        maxCost = Math.max(maxCost, knapSack(W, wt, val, n - 1, dp));
+
+        return dp[n][W] = maxCost;
+    }
+
+    public static int knapSack_DP(int W, int wt[], int val[], int n) {
+        
+        int[][] dp = new int[n + 1][W + 1];
+        
+        for(int N = 0; N <= n; N++){
+            for(int w = 0; w <= W; w++){
+                if(N == 0 || w == 0){
+                    dp[N][w] = 0;
+                    continue;
+                }
+                
+                if(w - wt[N - 1] >= 0)
+                    dp[N][w] = dp[N - 1][w - wt[N - 1]] + val[N -1];
+                dp[N][w] = Math.max(dp[N][w],dp[N - 1][w]); 
+        
+            }
+        }
+        
+
+        return dp[n][W];
+    }
+
+    int knapSack(int W, int wt[], int val[], int n) 
+    { 
+       int[][] dp = new int[n][W];
+       return knapSack(W, wt, val, n, dp);
+    }
+
+    public static int knapsack_unbounded(int[] weight, int[] value, int BagWeight) {
+        // combination
+        int n = weight.length;
+        int[] dp = new int[BagWeight + 1];
+        for (int i = 0; i < n; i++) {
+            for (int bagWeight = weight[i]; bagWeight <= BagWeight; bagWeight++) {
+                dp[bagWeight] = Math.max(dp[bagWeight], dp[bagWeight - weight[i]] + value[i]);
+            }
+        }
+
+        return dp[BagWeight];
+    }
+
+    //Leetcode 698
+    public boolean canPartitionKSubsets(int[] arr, int k, int idx, int sumSF, int tar, boolean[] vis) {
+        if (k == 0)
+            return true;
+        if (sumSF > tar)
+            return false;
+        if (sumSF == tar) {
+            return canPartitionKSubsets(arr, k - 1, 0, 0, tar, vis);
+        }
+
+        boolean res = false;
+        for (int i = idx; i < arr.length; i++) {
+            if (vis[i])
+                continue;
+            vis[i] = true;
+            res = res || canPartitionKSubsets(arr, k, i + 1, sumSF + arr[i], tar, vis);
+            vis[i] = false;
+        }
+
+        return res;
+
+    }
+
+    public boolean canPartitionKSubsets(int[] arr, int k) {
+        int n = arr.length;
+        int sum = 0;
+        int maxEle = 0;
+        for (int ele : arr) {
+            sum += ele;
+            maxEle = Math.max(maxEle, ele);
+        }
+
+        if (sum % k != 0 || maxEle > sum / k)
+            return false;
+        boolean[] vis = new boolean[n];
+
+        return canPartitionKSubsets(arr, k, 0, 0, sum / k, vis);
+    }
+
     public static void main(String[] args){
         targetSum(new int[] { 2, 3, 5, 7 }, 10);
     }
