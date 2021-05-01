@@ -91,4 +91,38 @@ public class DP11 {
         
         return maxCoins(nums, 0, n - 1, dp);
     }
+
+    //Leetcode 1039
+    public int minScoreTriangulation(int[] values, int si, int ei, int[][] dp) {
+        if(ei - si <= 1){
+            return dp[si][ei] = 0;        
+        }
+        
+        if(dp[si][ei] != -1){
+            return dp[si][ei];
+        }
+        
+        int minAns = (int)1e9;
+        for(int cut = si + 1; cut < ei; cut++){
+            int lans = minScoreTriangulation(values, si, cut, dp);
+            int rans = minScoreTriangulation(values, cut, ei, dp);
+            
+            minAns = Math.min(minAns, lans + values[si] * values[cut] * values[ei] + rans);
+            
+        }
+        
+        return dp[si][ei] = minAns;
+    }
+    
+    public int minScoreTriangulation(int[] values) {
+        int n = values.length;
+        int[][] dp = new int[n][n];
+        
+        for(int[] d : dp)
+            Arrays.fill(d, -1);
+        
+        return minScoreTriangulation(values, 0, n - 1, dp);
+    }
+
+    
 }
