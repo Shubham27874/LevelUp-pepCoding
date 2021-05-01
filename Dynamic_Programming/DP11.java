@@ -62,4 +62,33 @@ public class DP11 {
 
         return minCut_memo(s, 0, isPalindrome, dp);
     }
+
+    //Leetcode 312
+    public int maxCoins(int[] nums, int si, int ei, int[][] dp) {
+        if(dp[si][ei] != -1){
+            return dp[si][ei];
+        }
+        
+        int lval = (si - 1) == -1 ? 1 : nums[si - 1];
+        int rval = (ei + 1) == nums.length ? 1 : nums[ei + 1];
+        
+        int maxAns = 0;
+        for(int cut = si; cut <= ei; cut++){
+            int lans = (cut == si) ? 0 : maxCoins(nums, si, cut - 1, dp);
+            int rans = (cut == ei) ? 0 : maxCoins(nums, cut + 1, ei, dp);
+            
+            maxAns = Math.max(maxAns, lans + lval * nums[cut] * rval + rans);
+        }
+        
+        return dp[si][ei] = maxAns;
+    }
+    
+    public int maxCoins(int[] nums) {
+        int n = nums.length;
+        int[][] dp = new int[n][n];
+        for(int[] d : dp)
+            Arrays.fill(d, -1);
+        
+        return maxCoins(nums, 0, n - 1, dp);
+    }
 }
