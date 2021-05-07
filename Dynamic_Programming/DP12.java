@@ -71,8 +71,7 @@ public class DP12 {
 
     public static void main(String[] args){
         System.out.println(isValidPalindrome());
-        System.out.println("dryRun");
-        //Hello
+        
     }
 
 }
