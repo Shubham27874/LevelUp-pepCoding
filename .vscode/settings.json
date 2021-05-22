@@ -1,5 +1,7 @@
 {
     "java.project.sourcePaths": [
-        "Dynamic_Programming"
+        "Stack_and_Queue/ST01",
+        "Dynamic_Programming",
+        "Stack_and_Queue/Construction"
     ]
 }
