@@ -11,8 +11,6 @@ public class stack {
         this.MaxCapacity = size;
     }
 
-
-
     public stack(){
         intialize(10);
     }
@@ -47,7 +45,7 @@ public class stack {
         return this.arr[this.tos];
     }
 
-    public int top() throws exception{
+    public int top() throws Exception{
         StackUnderFlowException();
         return top_();
     }
