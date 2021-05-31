@@ -1,4 +1,5 @@
 import java.util.Stack;
+import java.util.ArrayDeque;
 import java.util.Arrays;
 
 public class questions {
@@ -78,53 +79,10 @@ public class questions {
         return ans;
     }
 
-    //StockSpanProblem - GFGpractice
-    public int[] calculateSpan(int arr[], int n)
-    {
-        int[] ans = NGOL(arr, n);
-        for(int i = 0; i < n; i++){
-            ans[i] = i - ans[i];
-        }
-
-        return ans;
-    }
     
-    public int[] NGOL(int[] arr, int n){
-        int[] ans = new int[n];
-        Stack<Integer> st = new Stack<>();
-        Arrays.fill(ans, -1);
 
-        for(int i = n - 1; i >= 0; i--){
-            while(st.size() != 0 && arr[st.peek()] < arr[i]){
-                ans[st.pop()] = i;
-            }
-            st.push(i);
-        }
-
-        return ans;
-    }
-
-    //LeetCode 901
-    Stack<int[]> st;
-    int day;
-
-    public void StockSpanner() {
-        this.st = new Stack<>();
-        this.day = 0;
-        
-        st.push(new int[]{-1, -1});
-    }
-    
-    public int next(int price) {
-        while(st.peek()[0] != -1 && st.peek()[1] <= price)
-            st.pop();
-
-        int span = day - st.peek()[0];
-        st.push(new int[]{day++, price});
-        return span;
-    }
 
     public static void main(String[] args){
-        System.out.println("hello");
+        
     }
 }
