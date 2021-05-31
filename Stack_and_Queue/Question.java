@@ -8,7 +8,7 @@ public class Question {
         Arrays.fill(ans, n);
 
         Stack<Integer> st = new Stack<>();
-        for(int i = 0; i <= n; i++){
+        for(int i = 0; i < n; i++){
             while(st.size() != 0 && arr[st.peek()] < arr[i]){
                 ans[st.pop()] = i;
             }
@@ -36,7 +36,7 @@ public class Question {
         Arrays.fill(ans, n);
 
         Stack<Integer> st = new Stack<>();
-        for(int i = 0; i <= n; i++){
+        for(int i = 0; i < n; i++){
             while(st.size() != 0 && arr[st.peek()] > arr[i]){
                 ans[st.pop()] = i;
             }
@@ -47,7 +47,7 @@ public class Question {
 
     public static void NSOL(int[] arr, int[] ans){
         int n = arr.length;
-        Arrays.fill(ans, n);
+        Arrays.fill(ans, -1);
 
         Stack<Integer> st = new Stack<>();
         for(int i = n - 1; i >= 0; i--){
@@ -220,6 +220,157 @@ public class Question {
         return len;
     } 
 
+    //Leetcode 735
+    public int[] asteroidCollision(int[] arr) {
+        Stack<Integer> st = new Stack<>();
+
+        for(int ele : arr){
+            if(ele > 0){
+                st.push(ele);
+                continue;
+            }
+
+            while(st.size() != 0 && st.peek() > 0 && st.peek() < -ele)
+                st.pop();
+            
+            if(st.size() != 0 && st.peek() == -ele)
+                st.pop();
+            else 
+            if(st.size() == 0 || st.peek() < 0)
+                st.push(ele);
+            else{
+
+            }
+            
+        }
+
+        int[] ans = new int[st.size()];
+        int idx = st.size() - 1;
+        while(st.size() != 0){
+            ans[idx--] = st.peek();
+            st.pop();
+        }
+
+        return ans;
+    }
+
+    //Leetcode 84
+    public int largestRectangleArea(int[] heights) {
+        int n = heights.length;
+        int[] nsor = new int[n];
+        int[] nsol = new int[n];
+
+        NSOR(heights, nsor);
+        NSOL(heights, nsol);
+
+        int maxArea = 0;
+
+        for(int i = 0; i < n; i++){
+            int h = heights[i];
+            int w = nsor[i] - nsol[i] - 1;
+
+            maxArea = Math.max(maxArea, h * w);
+        }
+
+        return maxArea;
+    }
+
+    //Optimal Method
+    public int largestRectangleArea_2(int[] heights) {
+        int n = heights.length;
+        Stack<Integer> st = new Stack<>();
+        st.push(-1);
+        int maxArea = 0;
+
+        int i = 0;
+        while(i < n){
+            while(st.peek() != -1 && heights[st.peek()] >= heights[i]){
+                int idx = st.peek();
+                st.pop();
+                int h = heights[idx];
+                int w = i - st.peek() - 1;
+                maxArea = Math.max(maxArea, h * w);
+            }
+
+            st.push(i++);
+        }
+
+        while(st.peek() != -1){
+                int idx = st.peek();
+                st.pop();
+                int h = heights[idx];
+                int w = n - st.peek() - 1;
+                maxArea = Math.max(maxArea, h * w);
+        }
+
+        return maxArea;
+    }
+
+    ///Leetcode 85
+    public int maximalRectangle(char[][] matrix) {
+        int n = matrix.length;
+        int m = matrix[0].length;
+
+        if(n == 0 || m == 0)
+            return 0;
+
+        int[] heights = new int[m];
+        int maxRec = 0;
+
+        for(int i = 0; i < n; i++){
+            for(int j = 0 ; j < m; j++){
+                char ch = matrix[i][j];
+                heights[j] = ch == '1' ? heights[j] + 1 : 0;
+            }
+
+            maxRec = Math.max(maxRec, largestRectangleArea(heights));
+        }
+
+        return maxRec;
+    }
+
+    //Leetcode 221
+    public int largestSquareArea(int[] heights) {
+        int n = heights.length;
+        int[] nsor = new int[n];
+        int[] nsol = new int[n];
+
+        NSOR(heights, nsor);
+        NSOL(heights, nsol);
+
+        int maxArea = 0;
+
+        for(int i = 0; i < n; i++){
+            int h = heights[i];
+            int w = nsor[i] - nsol[i] - 1;
+
+            maxArea = Math.max(maxArea, (h < w) ? h * h : w * w);  //Only change from maximalRectangle
+        }
+
+        return maxArea;
+    }
+    
+    public int maximalSquare(char[][] matrix) {
+        if(matrix.length == 0 || matrix[0].length == 0)
+            return 0;
+        
+        int n = matrix.length;
+        int m = matrix[0].length;
+
+        int[] heights = new int[m];
+        int maxRec = 0;
+
+        for(int i = 0; i < n; i++){
+            for(int j = 0 ; j < m; j++){
+                char ch = matrix[i][j];
+                heights[j] = ch == '1' ? heights[j] + 1 : 0;
+            }
+
+            maxRec = Math.max(maxRec, largestRectangleArea(heights));
+        }
+
+        return maxRec;
+    }
 
     public static void main(String[] args){
         
