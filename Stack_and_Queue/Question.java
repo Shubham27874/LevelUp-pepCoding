@@ -1,6 +1,7 @@
 import java.util.Stack;
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.ArrayList;
 
 public class Question {
     public static void NGOR(int[] arr, int[] ans){
@@ -370,6 +371,40 @@ public class Question {
         }
 
         return maxRec;
+    }
+
+    //Leetcode 402
+    public String removeKdigits(String num, int k) {
+        ArrayList<Character> st = new ArrayList<>();
+
+        for(int i = 0; i < num.length(); i++){
+            char ch = num.charAt(i);
+            while(st.size() != 0 && st.get(st.size() - 1) > ch && k > 0){
+                st.remove(st.size() - 1);
+                k--;
+            }
+
+            st.add(ch);
+        }
+
+        while(k-- > 0){
+            st.remove(st.size() - 1);
+        }
+
+        //Handling 0's in front of the String
+        StringBuilder ans = new StringBuilder();
+        boolean flag = false;
+        for(Character ch : st){
+            if(ch == '0' && !flag){
+                continue;
+            }
+
+            flag = true;
+            ans.append(ch);
+        }
+
+        String res = ans.toString();
+        return res.length() == 0 ? "0" : res;
     }
 
     public static void main(String[] args){
