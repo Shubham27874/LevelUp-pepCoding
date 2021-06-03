@@ -407,6 +407,138 @@ public class Question {
         return res.length() == 0 ? "0" : res;
     }
 
+    //LeetCode 316/1081
+    public String removeDuplicateLetters(String s) {
+        int n = s.length();
+        StringBuilder st = new StringBuilder();
+        boolean[] vis = new boolean[26];
+        int[] freq = new int[26];
+            
+        for(int i = 0; i < n; i++){
+            freq[s.charAt(i) - 'a']++;
+        }
+        
+        for(int i = 0; i < n; i++){
+            char ch = s.charAt(i);
+            freq[ch - 'a']--;
+            if(vis[ch - 'a']) 
+                continue;
+            
+            while(st.length() != 0 && st.charAt(st.length() - 1) > ch && freq[st.charAt(st.length() - 1) - 'a'] > 0){
+                vis[st.charAt(st.length() - 1) - 'a'] = false;
+                st.deleteCharAt(st.length() - 1);
+            }
+            
+            vis[ch - 'a'] = true;
+            st.append(ch);
+        }
+        
+        return st.toString();
+    }
+
+    //LeetCode 42
+    public int trap(int[] height) {
+        int n = height.length;
+        int[] lHeight = new int[n];
+        int[] rHeight = new int[n];
+        
+        int prev = 0;
+        for(int i = 0; i < n; i++){
+            lHeight[i] = Math.max(height[i], prev);
+            prev = lHeight[i];
+        }
+        
+        prev = 0;
+        for(int i = n - 1; i >= 0; i--){
+            rHeight[i] = Math.max(height[i], prev);
+            prev = rHeight[i];
+        }
+        
+        int totalWater = 0;
+        for(int i = 0; i < n; i++){
+            totalWater += Math.min(lHeight[i], rHeight[i]) - height[i];
+        }
+        
+        return totalWater;
+    }
+
+    public int trap_02(int[] height) {
+        int n = height.length;
+        Stack<Integer> st = new Stack<>();
+
+        int totalWater = 0;
+        for(int i = 0; i < n; i++){
+            while(st.size() != 0 && height[st.peek()] < height[i]){
+                int idx = st.pop();
+                if(st.size() == 0)
+                    break;
+
+                int w = i - st.peek() - 1;
+                int h = height[idx];
+
+                totalWater += w * (Math.min(height[st.peek()], height[i]) - h);
+            }
+
+            st.push(i);
+        }
+
+        return totalWater;
+    }
+
+    public int trap_03(int[] height) {
+        int n = height.length;
+        int lmax = 0, rmax = 0;
+        int l = 0, r = n - 1, totalWater = 0;
+
+        while(l < r){
+            lmax = Math.max(lmax, height[l]);
+            rmax = Math.max(rmax, height[r]);
+
+            totalWater += (lmax < rmax) ? lmax - height[l++] : rmax - height[r--];  
+        }
+
+        return totalWater;
+    }
+
+    //Leetcode 155
+    Stack<Long> stk = new Stack<>();
+    long min = 0;
+
+    public void MinStack() {
+        
+    }
+    
+    public void push(int val) {
+        long a = val;
+        if(stk.size() == 0){
+            stk.push(a);
+            min = val;
+        } else {
+            if(val < min){
+                stk.push(val + (val - min));
+                min = val;
+            } else
+                stk.push(a);
+        }
+    }
+    
+    public void pop() {
+        if(stk.peek() < min)
+            min = min + (min - stk.peek());
+        stk.pop();
+    }
+    
+    public int top() {
+        if(stk.peek() < min)
+            return (int)min;
+        
+        return stk.peek().intValue();
+    }
+    
+    public int getMin() {
+        return (int)min;
+    }
+
     public static void main(String[] args){
         
     }
