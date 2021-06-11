@@ -1,0 +1,98 @@
+import java.util.*;
+
+public class heap {
+    
+    private ArrayList<Integer> arr;
+    private boolean isMaxHeap = true;
+
+    public void constructHeap(){ // O(nlogn) -> O(n) 
+        for(int i = arr.size() - 1; i >= 0; i--){
+            downHeapify(i);
+        }
+    }
+
+    void defaultValue(boolean isMaxHeap){
+        this.arr = new ArrayList<>();
+        this.isMaxHeap = isMaxHeap;
+    }
+
+    heap(){
+        defaultValue(true);
+    }
+
+    heap(boolean isMaxHeap){
+        defaultValue(isMaxHeap);
+    }
+
+    heap(int[] arr, boolean isMaxHeap){
+        defaultValue(isMaxHeap);
+        for(int ele : arr)
+            this.arr.add(ele);
+
+        constructHeap();
+    }
+
+
+    public int size(){
+        return this.arr.size();
+    }
+
+    public boolean isEmpty(){
+        return this.arr.size() == 0;
+    }
+    
+    public int top(){  // O(1)
+        return this.arr.get(0);
+    }
+
+    public void add(int data){ // O(logn)
+        this.arr.add(data);
+        int n = this.arr.size();
+        upHeapify(n - 1);
+    }
+
+    public int remove(){  // O(logn)
+        int n = arr.size();
+        
+        int remoEle = this.arr.get(0);
+        swap(0, n - 1);
+        this.arr.remove(n - 1);
+
+        downHeapify(0);
+        return remoEle;
+    }
+
+    private void swap(int i, int j){  // O(1)
+        int temp = this.arr.get(i);
+        this.arr.set(i, this.arr.get(j));
+        this.arr.set(j, temp);
+    }
+
+    private void downHeapify(int pi){ // O(logn)
+        int maxIdx = pi;
+        int lci = 2 * pi + 1;
+        int rci = 2 * pi + 2;
+
+        if(lci < arr.size() && this.arr.get(lci) > this.arr.get(maxIdx)){
+            maxIdx = lci;
+        }
+
+        if(rci < arr.size() && this.arr.get(rci) > this.arr.get(maxIdx)){
+            maxIdx = rci;
+        }
+
+        if(maxIdx != pi){
+            swap(pi, maxIdx);
+            downHeapify(maxIdx);
+        }
+    }
+
+    private void upHeapify(int ci){ // O(logn)
+        int pi = (ci - 1) / 2;
+
+        if(pi >= 0 && this.arr.get(ci) > this.arr.get(ci)){
+            swap(pi, ci);
+            upHeapify(pi);
+        }
+    }
+}
