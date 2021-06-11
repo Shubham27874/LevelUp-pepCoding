@@ -32,6 +32,12 @@ public class heap {
         constructHeap();
     }
 
+    private boolean compareTo(int i, int j){
+        if(isMaxHeap)
+            return this.arr.get(i) > this.arr.get(j);
+        else
+            return this.arr.get(i) < this.arr.get(j);
+    }
 
     public int size(){
         return this.arr.size();
@@ -73,11 +79,11 @@ public class heap {
         int lci = 2 * pi + 1;
         int rci = 2 * pi + 2;
 
-        if(lci < arr.size() && this.arr.get(lci) > this.arr.get(maxIdx)){
+        if(lci < arr.size() && compareTo(lci, maxIdx)){
             maxIdx = lci;
         }
 
-        if(rci < arr.size() && this.arr.get(rci) > this.arr.get(maxIdx)){
+        if(rci < arr.size() && compareTo(rci, maxIdx)){
             maxIdx = rci;
         }
 
@@ -90,7 +96,7 @@ public class heap {
     private void upHeapify(int ci){ // O(logn)
         int pi = (ci - 1) / 2;
 
-        if(pi >= 0 && this.arr.get(ci) > this.arr.get(ci)){
+        if(pi >= 0 && compareTo(ci, pi)){
             swap(pi, ci);
             upHeapify(pi);
         }
