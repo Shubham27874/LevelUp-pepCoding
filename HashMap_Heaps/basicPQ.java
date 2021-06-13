@@ -3,7 +3,7 @@ import java.util.PriorityQueue;
 public class basicPQ {
     
     public static void test1_minPQ(int[] arr) {
-        PriorityQueue<Integer> pq = new PriorityQueue<>(); //MinPQ
+         PriorityQueue<Integer> pq = new PriorityQueue<>(); //MinPQ
         for(int ele : arr){
             pq.add(ele);
         }

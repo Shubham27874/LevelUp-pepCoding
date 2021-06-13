@@ -16,6 +16,7 @@ public class basicHM {
             System.out.println(s + "->" + map.get(s));
     }
 
+    //String to frequency Map
     public static void test2(String str) {
         HashMap<Character, Integer> map = new HashMap<>();
 
