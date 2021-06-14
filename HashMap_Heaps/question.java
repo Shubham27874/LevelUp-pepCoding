@@ -253,4 +253,89 @@ public class question {
         return ans;
     }
 
+    //Leetcode 380
+    class RandomizedSet {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        ArrayList<Integer> list = new ArrayList<>();
+        Random rand = new Random();
+
+        /** Initialize your data structure here. */
+        public RandomizedSet() {
+            
+        }
+        
+        /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
+        public boolean insert(int val) {
+            if(map.containsKey(val))
+                return false;
+
+            list.add(val);
+            map.put(val, list.size() - 1);
+
+            return true;
+        }
+        
+        /** Removes a value from the set. Returns true if the set contained the specified element. */
+        public boolean remove(int val) {
+            if(!map.containsKey(val))
+                return false;
+
+            int idx = map.get(val);
+            int lidx = list.size() - 1;
+            int lval = list.get(lidx);
+
+            list.set(idx, lval);
+            map.put(lval, idx);
+
+            list.remove(lidx);
+            map.remove(val);
+
+            return true;
+        }
+        
+        /** Get a random element from the set. */
+        public int getRandom() {
+            int idx = rand.nextInt(list.size());
+            return list.get(idx);            
+        }
+    }
+
+    //Leetcode 895
+    class FreqStack {
+        HashMap<Integer, Integer> freq;
+        ArrayList<Stack<Integer>> freqMap;
+        int maxFreq;
+
+        public FreqStack() {
+            freq = new HashMap<>();
+            freqMap = new ArrayList<>();
+            maxFreq = 0;
+            
+            freqMap.add(new Stack<>());  //Dummy
+        }
+        
+        public void push(int val) {
+            freq.put(val, freq.getOrDefault(val, 0) + 1);
+            maxFreq = Math.max(maxFreq, freq.get(val));
+
+            if(freqMap.size() == maxFreq)
+                freqMap.add(new Stack<>());
+            
+            freqMap.get(freq.get(val)).add(val);
+        }
+        
+        public int pop() {
+            int rv = freqMap.get(maxFreq).pop();
+            if(freqMap.get(maxFreq).size() == 0){
+                freqMap.remove(maxFreq);
+                maxFreq--;
+            }
+
+            freq.put(rv, freq.get(rv) - 1);
+            if(freq.get(rv) == 0)
+                freq.remove(rv);
+
+            return rv;
+        }
+    }
 }
