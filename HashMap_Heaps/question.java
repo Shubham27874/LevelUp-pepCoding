@@ -338,4 +338,142 @@ public class question {
             return rv;
         }
     }
+
+    //Leetcode 895 - PQ solution
+    class FreqStack0 {
+        private class pair implements Comparable<pair> {
+            int val = 0;
+            int freq = 0;
+            int idx = 0;
+
+            pair(int val, int freq, int idx) {
+                this.val = val;
+                this.freq = freq;
+                this.idx = idx;
+            }
+
+            public int compareTo(pair o) {
+                if (this.freq == o.freq)
+                    return o.idx - this.idx; // other - this, for max PQ
+
+                return o.freq - this.freq;
+            }
+        }
+
+        private HashMap<Integer, Integer> freqMap;
+        private PriorityQueue<pair> pq;
+        private int idx = 0;
+
+        public void FreqStack() {
+            this.freqMap = new HashMap<>();
+            this.pq = new PriorityQueue<>();
+            this.idx = 0;
+        }
+
+        public void push(int val) { // Log(n)
+            freqMap.put(val, freqMap.getOrDefault(val, 0) + 1);
+            pq.add(new pair(val, freqMap.get(val), idx++));
+        }
+
+        public int pop() { // Log(n)
+            pair p = pq.remove();
+            freqMap.put(p.val, freqMap.get(p.val) - 1);
+            if (freqMap.get(p.val) == 0)
+                freqMap.remove(p.val);
+
+            return p.val;
+        }
+    }
+
+    //Leetcode 407
+    public int trapRainWater(int[][] heightMap) {
+        int n = heightMap.length, m = heightMap[0].length;
+        int minB = 0, totalWater = 0;
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a,b) -> {
+            int i1 = a / m, j1 = a % m;
+            int i2 = b / m, j2 = b % m;
+
+            return heightMap[i1][j1] - heightMap[i2][j2];
+        });
+
+        boolean[][] vis = new boolean[n][m];
+
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(i == 0 || j == 0 || i == n - 1 || j == m - 1) {
+                    vis[i][j] = true;
+                    pq.add(i * m + j);
+                }
+            }
+        }
+
+        int[][] dir = {{1,0}, {0,1}, {-1,0}, {0,-1}}; 
+        
+        while(pq.size() != 0){
+            int idx = pq.remove();
+            int i = idx / m;
+            int j = idx % m;
+
+            minB = Math.max(minB, heightMap[i][j]);
+            totalWater += minB - heightMap[i][j];
+
+            for(int d = 0; d < 4; d++){
+                int r = i + dir[d][0];
+                int c = j + dir[d][1];
+
+                if(r >= 0 && c >= 0 && r < n && c < m && !vis[r][c]){
+                    vis[r][c] = true;
+                    pq.add(r * m + c);
+                }
+            }
+        }
+
+        return totalWater;
+    }
+
+    //Letcode778
+    public int swimInWater(int[][] grid) {
+        int n = grid.length;
+        
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a,b) -> {
+            int i1 = a / n, j1 = a % n;
+            int i2 = b / n, j2 = b % n;
+
+            return grid[i1][j1] - grid[i2][j2];
+        });
+
+        boolean[][] vis = new boolean[n][n];
+        int minH = 0, time = 0;
+        int[][] dir = {{1,0}, {0,1}, {-1,0}, {0,-1}}; 
+
+        pq.add(0);
+        vis[0][0] = true;
+
+        while(pq.size() != 0){
+            int idx = pq.remove();
+            int i = idx / n;
+            int j = idx % n;
+            int height = grid[i][j];
+
+            time += Math.max(0, height - minH);  //**dimag laga tha**
+
+            if(i == n - 1 && j == n - 1)
+                break;
+
+            minH = Math.max(minH, height);
+
+            for(int d = 0; d < dir.length; d++){
+                int r = i + dir[d][0];
+                int c = j + dir[d][1];
+
+                if(r >= 0 && c >= 0 && r < n && c < n && !vis[r][c]){
+                    vis[r][c] = true;
+                    pq.add(r * n + c);
+                }
+            }
+        }
+
+        return time;
+    }
+    
 }
