@@ -1,5 +1,3 @@
-import java.util.*;
-
 public class heapSort {
     
     public static boolean compareTo(int[] arr, boolean isIncreasing, int i, int j)
