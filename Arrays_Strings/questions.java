@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class questions {
     //Leetcode 189
     public void swap(int[] arr, int i, int j){
@@ -175,6 +177,135 @@ public class questions {
         }
 
         return len == (int)1e9 ? "" : s.substring(gsi, gsi + len);
+    }
+
+    //https://practice.geeksforgeeks.org/problems/smallest-distant-window3132/1
+    public String findSubString(String str) {
+        if(str.length() <= 1)
+            return str;
+
+        int count = 0;
+        int[] freq = new int[128];
+        for(int i = 0; i < str.length(); i++){
+            if(freq[str.charAt(i)] == 0){
+                freq[str.charAt(i)]++;
+                count++;
+            }
+        }
+
+        int si = 0, ei = 0, len = (int)1e9, gsi = 0, n = str.length();
+        int actualLen = count;
+
+        while(ei < n){
+            if(freq[str.charAt(ei++)]-- > 0)
+                count--;
+            
+            while(count == 0){
+                if(ei - si  < len){
+                    len = ei - si;
+                    gsi = si;
+                }
+
+                if(freq[str.charAt(si++)]++ == 0)
+                    count++;
+            }
+
+            if(actualLen == count)
+                break;
+        }
+
+        return str.substring(gsi, gsi + len);
+    }
+
+    //Leetcode 340
+    public int lengthOfLongestSubstringKDistinct(String s, int k) {
+        int n = s.length(), si = 0, ei = 0, len = 0, count = 0;
+        if(n <= k)
+            return n;
+            
+        int[] freq = new int[128];
+        
+        while(ei < n){
+            if(freq[s.charAt(ei++)]++ == 0)  
+                count++;
+            
+            while(count > k){
+                if(freq[s.charAt(si++)]-- == 1)   
+                    count--;
+            }
+            
+            len = Math.max(len, ei - si);
+        }
+        
+        return len;
+    }
+
+    //Leetcode 1456
+    public boolean isVowel(Character ch){     //Can also use HashMap, HashSet, Arraylist in main funciton(complexity would be same)
+        return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u';
+    }
+
+    public int maxVowels(String s, int k) {
+        int n = s.length(), ei = 0, si = 0, vowelCount = 0, maxVowelCount = 0;
+
+        while(ei < n){
+            if(isVowel(s.charAt(ei++)))
+                vowelCount++;
+
+            if(ei - si == k){
+                maxVowelCount = Math.max(maxVowelCount, vowelCount);
+
+                if(isVowel(s.charAt(si++)))
+                    vowelCount--;
+            }
+        }
+
+        return maxVowelCount;
+    }
+
+    public int atMostKDistinct(int[] arr, int k){
+        HashMap<Integer, Integer> freq = new HashMap<>();
+        int n = arr.length, ei = 0, si = 0, ans = 0;
+
+        while(ei < n){
+            freq.put(arr[ei], freq.getOrDefault(arr[ei], 0) + 1);
+            ei++;
+            while(freq.size() > k){
+                freq.put(arr[si], freq.get(arr[si]) - 1);
+                if(freq.get(arr[si]) == 0){
+                    freq.remove(arr[si]);
+                }
+                si++;
+            }
+
+            ans += ei - si;
+        }
+
+
+        return ans;
+    }
+
+    public int atMostKDistinct_02(int[] arr, int k){
+        int[] freq = new int[20000 + 1];
+        int n = arr.length, ei = 0, si = 0, ans = 0, count = 0;
+
+        while(ei < n){
+            if(freq[arr[ei++]]++ == 0)
+                count++;
+
+            while(count > k){
+                if(freq[arr[si++]]-- == 1)
+                    count--;
+            }
+                ans += ei - si;
+        }
+
+        return ans;
+    }    
+
+    //Leetcode 992
+    public int subarraysWithKDistinct(int[] nums, int k) {
+        return atMostKDistinct(nums, k) - atMostKDistinct(nums, k - 1);
     }
 
     public static void main(String[] args){
