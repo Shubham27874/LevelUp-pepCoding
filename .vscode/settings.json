@@ -2,9 +2,10 @@
     "java.project.sourcePaths": [
         "Stack_and_Queue/Construction",
         "Stack_and_Queue",
+        "Linked_List",
         "HashMap_Heaps",
         "Dynamic_Programming",
         "Arrays_Strings",
-        "Linked_List"
+        ""
     ]
 }

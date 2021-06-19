@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.LinkedList;
 
 public class DP01 {
     public static void print1D(int[] arr){
