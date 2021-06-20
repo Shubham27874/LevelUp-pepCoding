@@ -308,6 +308,267 @@ public class questions {
         return atMostKDistinct(nums, k) - atMostKDistinct(nums, k - 1);
     }
 
+    //Leetcode 1248
+    public int atMostOdd(int[] arr, int k){
+        int n = arr.length, ei = 0, si = 0, ans = 0, count = 0;
+
+        while(ei < n){
+            if((arr[ei++] & 1) != 0)
+                count++;
+
+            while(count > k){
+                if((arr[si++] & 1) != 0)
+                    count--;
+            }
+
+            ans += ei - si;
+        }
+
+        return ans;
+    }
+
+    public int numberOfSubarrays(int[] arr, int k) {
+        return atMostOdd(arr, k) - atMostOdd(arr, k - 1);
+    }
+
+    //Leetcode 904
+    public int totalFruit(int[] arr) {
+        int n = arr.length, ei = 0, si = 0, len = 0, count = 0;
+        int[] freq = new int[40000 + 1];
+        
+        while(ei < n){
+            if(freq[arr[ei++]]++ == 0)
+                count++;
+            
+            while(count > 2){
+                if(freq[arr[si++]]-- == 1)
+                    count--;
+            }
+            
+            len = Math.max(len, ei - si);
+        }
+        
+        return len;
+    }
+
+    //Leetcode 930
+    public int atMostSum(int[] arr, int tar){
+        int n = arr.length, ei = 0, si = 0, count = 0, sum = 0;
+        
+        while(ei < n){
+            sum += arr[ei++];
+            
+            while(sum > tar)
+                sum -= arr[si++];
+            
+            count += ei - si;
+        }
+        
+        return count;
+    }
+    
+    public int numSubarraysWithSum(int[] arr, int tar) {
+        return atMostSum(arr, tar) - (tar != 0 ? atMostSum(arr, tar - 1) : 0);
+    }
+
+    //Leetcode 485
+    public int findMaxConsecutiveOnes(int[] arr) {
+        int n = arr.length, ei = 0, si = 0, count = 0, len = 0;
+        
+        while(ei < n){
+            if(arr[ei++] == 0)
+                count++;
+            
+            while(count == 1){
+                if(arr[si++] == 0)
+                    count--;
+            }
+            
+            len = Math.max(len, ei - si);
+        }
+        
+        return len;
+    }
+
+    public int findMaxConsecutiveOnes_01(int[] arr) {
+        int n = arr.length, ei = 0, si = 0, len = 0;
+        
+        while(ei < n){
+            if(arr[ei++] == 0)
+                si = ei;
+            
+            len = Math.max(len, ei - si);
+        }
+        
+        return len;
+    }
+
+    //Leetcode 487 - 1 Zero is allowed
+    public int findMaxConsecutiveOnes_(int[] arr) {
+        int n = arr.length, ei = 0, si = 0, count = 0, len = 0;
+        
+        while(ei < n){
+            if(arr[ei++] == 0)
+                count++;
+            
+            while(count > 1){       //or (==2)
+                if(arr[si++] == 0)
+                    count--;
+            }
+            
+            len = Math.max(len, ei - si);
+        }
+        
+        return len;
+    }
+
+    public int findMaxConsecutiveOnes_opti(int[] arr) {
+        int n = arr.length, ei = 0, si = 0, firstZeroIndex = 0, len = 0;
+        
+        while(ei < n){
+            if(arr[ei++] == 0){
+                si = firstZeroIndex + 1;
+                firstZeroIndex = ei - 1;
+            }
+            
+            len = Math.max(len, ei - si);
+        }
+        
+        return len;
+    }
+
+    //Leetcode 1004
+    public int longestOnes(int[] arr, int k) {
+        int n = arr.length, ei = 0, si = 0, count = 0, len = 0;
+        
+        while(ei < n){
+            if(arr[ei++] == 0)
+                count++;
+            
+            while(count > k){
+                if(arr[si++] == 0)
+                    count--;
+            }
+            
+            len = Math.max(len, ei - si);
+        }
+        
+        return len;
+    }
+
+    //Leetcode 974
+    public int subarraysDivByK(int[] arr, int k) {
+        int[] rem = new int[k];
+        int n = arr.length, ei = 0, sum = 0, ans = 0;
+        rem[0] = 1;
+        
+        while(ei < n){
+            sum += arr[ei++];
+            int r = (sum % k + k) % k;
+            
+            ans += rem[r];
+            rem[r]++;
+        }
+        
+        return ans;
+    }
+
+    //followUp
+    public int longestSubarraysDivByK(int[] arr, int k) {
+        int[] rem = new int[k];
+        int n = arr.length, ei = 0, sum = 0, len = 0;
+        Arrays.fill(rem, -2);
+        rem[0] = -1;
+        while (ei < n) {
+            sum += arr[ei];
+            int r = (sum % k + k) % k;
+
+            if (rem[r] == -2)
+                rem[r] = ei;
+            else
+                len = Math.max(len, ei - rem[r]);
+            ei++;
+        }
+
+        return len;
+    }
+
+    public int subarraysDivByK_map(int[] arr, int k) {
+        HashMap<Integer, Integer> rem = new HashMap<>();
+        int n = arr.length, ei = 0, sum = 0, ans = 0;
+        rem.put(0, 1);
+        
+        while(ei < n){
+            sum += arr[ei++];
+            int r = (sum % k + k) % k;
+            
+            ans += rem.getOrDefault(r, 0);
+            rem.put(r, rem.getOrDefault(r, 0) + 1);
+        }
+        
+        return ans;
+    }
+
+    //followUp
+    public int longestSubarraysDivByK_map(int[] arr, int k) {
+        HashMap<Integer, Integer> rem = new HashMap<>();
+        int n = arr.length, ei = 0, sum = 0, len = 0;
+        rem.put(0, -1);
+
+        while (ei < n) {
+            sum += arr[ei];
+            int r = (sum % k + k) % k;
+
+            rem.putIfAbsent(r, ei);
+            len = Math.max(len, ei - rem.get(r));
+            ei++;
+        }
+
+        return len;
+    }
+
+    //Subarrays with equal 1s and 0s - GFG
+    public int countSubarrWithEqualZeroAndOne(int arr[], int n){
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(0, 1);
+        int ei = 0, count = 0, sum = 0;
+        
+        while(ei < n){
+            int val = arr[ei++];
+            sum += val;
+            if(val == 0)
+                sum += -1;
+
+            count += map.getOrDefault(sum, 0);
+            map.put(sum, map.getOrDefault(sum, 0) + 1);
+        }
+
+        return count;
+    }
+
+    //Leetcode 525
+    //followUp
+    public int findMaxLength(int[] arr) {
+        // rem, FirstIndex
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(0, -1);
+        int n = arr.length, ei = 0, len = 0, sum = 0;
+        
+        while(ei < n){
+            int val = arr[ei];
+            sum += val;
+            if(val == 0)
+                sum += -1;
+    
+            map.putIfAbsent(sum, ei);
+            len = Math.max(len, ei - map.get(sum));
+            ei++;
+            
+        }
+
+        return len;
+    }
+
     public static void main(String[] args){
         
     }
