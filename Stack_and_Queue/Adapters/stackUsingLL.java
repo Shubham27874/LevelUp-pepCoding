@@ -1,3 +1,5 @@
+package Adapters;
+
 import java.util.LinkedList;
 
 public class stackUsingLL{

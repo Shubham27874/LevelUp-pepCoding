@@ -1,3 +1,5 @@
+package Adapters;
+
 public class queue {
     private class ListNode {
         int data = 0;

@@ -1,3 +1,5 @@
+package Adapters;
+
 public class stack{
     private class ListNode {
         int data = 0;

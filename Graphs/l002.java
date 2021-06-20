@@ -1,3 +1,5 @@
+package Graphs;
+
 public class l002 {
     public static int hamiltonianCycleandPath(int src, int osrc, boolean[] vis, String psf, int totalNoedges){
         if(totalNoedges == N - 1){
@@ -10,7 +12,7 @@ public class l002 {
         }
         
         int count = 0;
-        vis[scr] = true;
+        vis[src] = true;
         for(Edge e : graph[src]){
             if(!vis[e.v]){
                 count += hamiltonianCycleandPath(e.v, osrc, vis, psf + src + " ", totalNoedges + 1);
