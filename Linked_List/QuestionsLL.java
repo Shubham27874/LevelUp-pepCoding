@@ -238,4 +238,51 @@ public class QuestionsLL {
         dummy.next = null;
         return h;
     }
+
+    //Leetcode 148
+    public ListNode sortList(ListNode head) {
+        if(head == null || head.next == null)
+            return head;
+
+        ListNode midnode = midNode(head);
+        ListNode nhead = midnode.next;
+        midnode.next = null;
+
+        ListNode h =  mergeTwoLists(sortList(head), sortList(nhead));
+
+        return h;
+    }
+
+    //Leetcode 23
+    public ListNode mergeKLists(ListNode[] lists, int si, int ei) {
+        if(si == ei)
+            return lists[si];
+
+        int mid = (si + ei) / 2;
+        ListNode l1 = mergeKLists(lists, si, mid);
+        ListNode l2 = mergeKLists(lists, mid + 1, ei);
+
+        return mergeTwoLists(l1, l2);
+    }
+
+    //NKlog(K)
+    public ListNode mergeKLists(ListNode[] lists) {
+        if(lists.length == 0)
+            return null;
+
+        return mergeKLists(lists, 0, lists.length - 1);
+    }
+
+    //N(K^2)
+    public ListNode mergeKLists_(ListNode[] lists) {
+        if(lists.length == 0)
+            return null;
+            
+        ListNode refList = null;
+        for(int i = 0; i < lists.length; i++){
+            refList = mergeTwoLists(refList, lists[i]);
+        }
+
+        return refList;
+    }
 }
