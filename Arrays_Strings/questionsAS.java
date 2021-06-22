@@ -732,6 +732,187 @@ public class questionsAS {
         return (int) Math.max(kadansSum, maxPrefixSum + + maxSuffixSum + ((k - 2) * arraySum) % mod) % mod;
     }
 
+    public static int kadanesAlgoForNegative(int[] arr){
+        int gSum = -(int)1e9, cSum = 0;
+        for(int ele : arr){
+            cSum = Math.max(ele, cSum + ele);
+            gSum = Math.max(gSum, cSum);
+        }
+
+        return gSum;
+    }
+
+    //Max Rectangle Sum
+    public int maximumSumRectangle(int R, int C, int arr[][]) {
+        int n = R, m = C, maxSum = -(int)1e9;
+        int[] colPrefixSum = new int[m];
+
+        for(int fixRow = 0; fixRow < n; fixRow++){
+            for(int row = fixRow; row < n; row++){
+                for(int col = 0; col < m; col++)
+                    colPrefixSum[col] += arr[row][col];
+
+                int sum = kadanesAlgoForNegative(colPrefixSum);
+
+                maxSum = Math.max(maxSum, sum);
+            }
+        }
+
+        return maxSum;
+    }
+
+    //if we want to print matrix
+    public int maximumSumRectangle_02(int R, int C, int arr[][]) {
+        int n = R, m = C, maxSum = -(int)1e9;
+        int r1 = 0, c1 = 0, r2 = 0, c2 = 0;
+        int[] colPrefixSum = new int[m];
+
+        for(int fixRow = 0; fixRow < n; fixRow++){
+            Arrays.fill(colPrefixSum, 0);
+            for(int row = fixRow; row < n; row++){
+                for(int col = 0; col < m; col++)
+                    colPrefixSum[col] += arr[row][col];
+
+                int[] res = kadanesAlgoGenericSubarray(colPrefixSum);
+
+                if(res[0] > maxSum){
+                    maxSum = res[0];
+                    r1 = fixRow;
+                    c1 = res[1];
+                    r2 = row;
+                    c2 = res[2];
+                }
+            }
+        }
+
+        for(int i = r1; i <= r2; i++){
+            for(int j = c1; j <= c2; j++){
+                System.out.print(arr[i][j] + " ");
+            }
+            System.out.println();
+        }
+
+        return maxSum;
+    }
+
+    //Leetcode 781
+    public int numRabbits(int[] arr) {
+        int[] map = new int[999 - 0 + 1];
+        int ans = 0;
+        
+        for(int ele : arr){
+            if(map[ele] == 0)
+                ans += ele + 1;
+            
+            map[ele]++;
+            
+            if(map[ele] == ele + 1)
+                map[ele] = 0;
+        }
+        
+        return ans;
+    }
+
+    //Slow(Bcoz hashmap mai operation karna is O(n))
+    public int numRabbits_(int[] arr) {
+        if(arr.length == 0)
+            return 0;
+        int n = arr.length;
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        int ans = 0;
+        for(int ele : arr){
+            if(!map.containsKey(ele)){
+                ans += (ele + 1);
+                map.put(ele, 1);
+            } else {
+                map.put(ele, map.get(ele) + 1);
+            }
+
+            if(map.get(ele) == ele + 1)
+                map.remove(ele);
+        }
+
+        return ans;
+    }
+
+    //Leetcode 1074
+    public int countSubarraysGivenTarget(int[] arr, int tar){
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(0, 1);
+        int count = 0, sum = 0;
+
+        for(int ele : arr){
+            sum += ele;
+            count += map.getOrDefault(sum - tar, 0);
+            map.put(sum, map.getOrDefault(sum, 0) + 1);
+        }
+
+        return count;
+    }
+
+    public int numSubmatrixSumTarget(int[][] arr, int tar) {
+        int n = arr.length, m = arr[0].length;
+        int count = 0;
+        int[] prefixColArray = new int[m];
+
+        for(int fixRow = 0; fixRow < n; fixRow++){
+            Arrays.fill(prefixColArray, 0);
+            for(int row = fixRow; row < n; row++){
+                for(int col = 0; col < m; col++){
+                    prefixColArray[col] += arr[row][col];
+                }
+
+                count += countSubarraysGivenTarget(prefixColArray, tar);
+            }
+        }
+
+        return count;
+    }
+
+    //Leetcode 363
+    public int kadanesAlgoWithSumUnderK(int[] arr, int k) {
+        int gsum = -(int) 1e9, csum = 0;
+        for (int ele : arr) {
+            csum += ele;
+            csum = Math.max(csum, ele);
+            gsum = Math.max(gsum, csum);
+
+            if (gsum >= k)
+                return gsum;
+        }
+
+        return gsum;
+    }
+
+    public int maxSumSubmatrix(int[][] arr, int k) {
+        int n = arr.length, m = arr[0].length;
+        int maxRes = 0;
+
+        for (int fixedRow = 0; fixedRow < n; fixedRow++) {
+
+            int[] prefixColArray = new int[m];
+            for (int row = fixedRow; row < n; row++) {
+                for (int col = 0; col < m; col++)
+                    prefixColArray[col] += arr[row][col];
+
+                int sum = kadanesAlgoWithSumUnderK(prefixColArray, k);
+
+                if (sum == k)
+                    return sum;
+                else if (sum < k) {
+                    maxRes = Math.max(maxRes, sum);
+                    continue;
+                }
+
+                // ????
+            }
+        }
+
+        return maxRes;
+
+    }
+
     public static void main(String[] args){
        int[] arr = {-1,-2,-3,-4};
        System.out.println(kadanesAlgo(arr));
