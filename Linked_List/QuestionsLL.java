@@ -1,4 +1,5 @@
 import org.w3c.dom.css.CSSStyleDeclaration;
+import org.w3c.dom.ls.LSException;
 
 public class QuestionsLL {
     public class ListNode {
@@ -331,5 +332,181 @@ public class QuestionsLL {
         }
 
         return slow;
+    }
+
+    //Leetcode 160
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if(headA == null || headB == null)
+            return null;
+
+        ListNode tail = headA;
+        while(tail.next != null){
+            tail = tail.next;
+        }
+
+        tail.next = headB;
+
+        ListNode ans = detectCycle(headA);
+        tail.next = null;
+
+        return ans;
+    }
+
+    public int lengthOfLL(ListNode head){
+        if(head == null)
+            return 0;
+
+        int count = 0;
+        ListNode temp = head;
+        while(temp != null){
+            temp = temp.next;
+            count++;
+        }
+
+        return count;
+    }
+
+    public ListNode getIntersectionNode_anotherApproach(ListNode headA, ListNode headB) {
+        if(headA == null || headB == null)
+            return null;
+
+        int l1 = lengthOfLL(headA);
+        int l2 = lengthOfLL(headB);
+
+        ListNode biggerList = l1 > l2 ? headA : headB;
+        ListNode smallerList = l1 > l2 ? headB : headA;
+
+        int diff = Math.max(l1, l2) - Math.min(l1, l2);
+        while(diff-- > 0){
+            biggerList = biggerList.next;
+        }
+
+        while(biggerList != smallerList){
+            biggerList = biggerList.next;
+            smallerList = smallerList.next;
+        }
+
+        return biggerList;
+
+    }
+
+    //Leetcode 19
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        if(head == null)
+            return head;
+
+        ListNode c1 = head;
+        ListNode c2 = head;
+
+        while(n-- > 0){
+            c2 = c2.next;
+        }
+
+        if(c2 == null){   //1st node ko remove karne ki baat
+            ListNode temp = head;
+            head = head.next;
+            temp.next = null;
+            return head;
+        }
+
+        while(c2.next != null){
+            c1 = c1.next;
+            c2 = c2.next;
+        }
+
+        ListNode temp = c1.next;
+        c1.next = c1.next.next;
+        temp.next = null;
+
+        return head;
+    }
+
+    //Leeetcode 25
+    ListNode th = null;
+    ListNode tt = null;
+
+    public void addfirstNode(ListNode node){
+        if(th == null){
+            th = node;
+            tt = node;
+        } else {
+            node.next = th;
+            th = node;
+        }
+    }
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if(head == null || head.next == null || k == 1)
+            return head;
+
+        ListNode oh = null;
+        ListNode ot = null;
+
+        int len = lengthOfLL(head);
+        ListNode curr = head;
+
+        while(len >= k){
+            int tempK = k;
+            while(tempK -- > 0){
+                ListNode forw = curr.next;
+                curr.next = null;
+                addfirstNode(curr);
+                curr = forw;
+            }
+
+            if(oh == null){
+                oh = th;
+                ot = tt;
+            } else {
+                ot.next = th;
+                ot = tt;
+            }
+
+            tt = null;
+            th = null;
+
+            len -= k;
+        }
+
+        ot.next = curr;
+        return oh;
+    }
+
+    //Leetcode92
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        if(head == null || head.next == null || m == n)
+            return head;
+
+        ListNode curr = head;
+        ListNode prev = null;
+
+        int idx = 1;
+
+        while(curr != null){
+            while(idx >= m && idx <= n){
+                ListNode forw = curr.next;
+                curr.next = null;
+                addfirstNode(curr);
+                curr = forw;
+                idx++;
+            }
+
+            if(idx > n){
+                if(prev != null){
+                    prev.next = th;
+                    tt.next = curr;
+                    return head;
+                } else {
+                    tt.next = curr;
+                    return th;
+                }
+            }
+
+            idx++;
+            prev = curr;
+            curr = curr.next;
+        }
+
+        return head;
     }
 }
