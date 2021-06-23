@@ -509,4 +509,96 @@ public class QuestionsLL {
 
         return head;
     }
+
+    //Leetcode 138
+    class Node {
+        int val;
+        Node next;
+        Node random;
+    
+        public Node(int val) {
+            this.val = val;
+            this.next = null;
+            this.random = null;
+        }
+    }
+
+    public void copyNodes(Node head){
+        Node curr = head;
+        while(curr != null){
+            Node forw = curr.next;
+
+            Node node = new Node(curr.val);
+
+            node.next = forw;
+            curr.next = node;
+
+            curr = forw;
+        }
+    }
+
+    public void setRandomPointer(Node head){
+        Node curr = head;
+
+        while(curr != null){
+            if(curr.random != null)
+                curr.next.random = curr.random.next;
+
+            curr = curr.next.next;
+        }
+    }
+
+    public Node extractLL(Node head){
+        Node curr = head;
+        Node dummy = new Node(-1);
+        Node copyCurr = dummy;
+
+        while(curr != null){
+            copyCurr.next = curr.next;
+            curr.next = curr.next.next;
+
+            curr = curr.next;
+            copyCurr = copyCurr.next;
+        }
+
+        return dummy.next;
+    }
+
+    public Node copyRandomList(Node head) {
+        if(head == null)
+            return head;
+            
+        copyNodes(head);
+        setRandomPointer(head);
+
+        return extractLL(head);
+    }
+
+    //https://practice.geeksforgeeks.org/problems/segregate-even-and-odd-nodes-in-a-linked-list5035/1
+    Node divide(int N, Node head){
+        Node dummyOdd = new Node(-1);
+        Node dummyEven = new Node(-1);    
+        Node oc = dummyOdd;
+        Node ec = dummyEven;
+
+        Node curr = head;
+        while(curr != null){
+            if(curr.val % 2 == 0){
+                ec.next = curr;
+                ec = ec.next;
+            } else {
+                oc.next = curr;
+                oc = oc.next;
+            }
+
+            curr = curr.next;
+        }
+
+        ec.next = dummyOdd.next;
+        oc.next = null;
+
+        return dummyEven.next;
+    }
+
+    
 }
