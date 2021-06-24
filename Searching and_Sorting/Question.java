@@ -1,5 +1,3 @@
-import javax.lang.model.util.ElementScanner14;
-
 public class Question {
     //Leetcdoe 704
     public static int binarySearch(int[] arr, int data){
