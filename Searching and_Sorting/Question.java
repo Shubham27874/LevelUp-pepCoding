@@ -147,7 +147,7 @@ public class Question {
     }
 
     //Leetcode 240
-    public boolean searchMatrix_(int[][] matrix, int target) {
+    public boolean searchMatrix_2(int[][] matrix, int target) {
         int n = matrix.length, m = matrix[0].length, si = n - 1, ei = 0;
         
         while(si >= 0 && ei < m){
@@ -212,5 +212,53 @@ public class Question {
 
         long[] sortedArray = new long[(int)N];
         return inversionCount(arr, 0, (int)N - 1, sortedArray);
+    }
+
+    //Leetcode 33
+    public int search(int[] nums, int target) {
+        int n = nums.length, si = 0, ei = n - 1;
+
+        while(si <= ei){
+            int mid = (si + ei) / 2;
+            if(nums[mid] == target)
+                return mid;
+            if(nums[si] <= nums[mid]){
+                if(nums[si] <= target && target < nums[mid])
+                    ei = mid - 1;
+                else    
+                    si = mid + 1;
+            } else {
+                if(nums[mid] < target && target <= nums[ei])
+                    si = mid + 1;
+                else    
+                    ei = mid - 1;
+            }
+        }
+
+        return -1;
+    }
+
+    //Leetcode 81
+    public boolean search(int[] nums, int target) {
+        int n = nums.length, si = 0, ei = n - 1;
+
+        while(si <= ei){
+            int mid = (si + ei) / 2;
+            if(nums[mid] == target || nums[si] == target)
+                return true;
+            if(nums[si] < nums[mid]){
+                if(nums[si] <= target && target < nums[mid])
+                    ei = mid - 1;
+                else
+                    si = mid + 1;
+            } else if(nums[mid] < nums[ei]){
+                if(nums[mid] < target && target <= nums[ei])
+                    si = mid + 1;
+                else 
+                    ei = mid - 1;;
+            } else si++;
+        }
+
+        return false;
     }
 }
