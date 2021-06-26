@@ -400,7 +400,7 @@ public class Question {
     public int twoSumCount(int[] nums1, int[] nums2, int target){
         HashMap<Integer, Integer> map = new HashMap<>();
         for(int ele : nums1)
-            map.put(ele, map.getOrdefault(ele, 0) + 1);
+            map.put(ele, map.getOrDefault(ele, 0) + 1);
         
         int count = 0;
         for(int ele : nums2)
