@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class Question {
     //Leetcdoe 704
     public static int binarySearch(int[] arr, int data){
@@ -294,5 +296,71 @@ public class Question {
         }
 
         return nums[si];
+    }
+
+    //Leetcode 167
+    public int[] twoSum(int[] arr, int tar) {
+        int n = arr.length, si = 0, ei = n - 1;
+        
+        while(si < ei){
+            int sum = arr[si] + arr[ei];
+            if(sum == tar)
+                return new int[]{si + 1, ei + 1};
+            else if(sum < tar)
+                si++;
+            else 
+                ei--;
+        }
+        
+        return new int[0];
+    }
+
+    //FollowUp
+    public List<List<Integer>> twoSum_(int[] arr, int tar, int si, int ei) {
+        List<List<Integer>> ans = new ArrayList<>();
+
+        while(si < ei){
+            int sum = arr[si] + arr[ei];
+            if(sum == tar){
+                List<Integer> smallAns = new ArrayList<>();
+                smallAns.add(arr[si]);
+                smallAns.add(arr[ei]);
+                ans.add(smallAns);
+
+                si++;
+                ei--;
+                while(si < ei && arr[si] == arr[si - 1]) si++;
+                while(si < ei && arr[ei] == arr[ei + 1]) ei--;
+            }
+            else if(sum < tar)
+                si++;
+            else 
+                ei--;
+        }
+        
+        return ans;
+    }
+
+    public void prepareAns(List<List<Integer>> ans, List<List<Integer>> smallAns, int fixEle){
+        for(List<Integer> arr : smallAns) {
+            List<Integer> ar = new ArrayList<>();
+            ar.add(fixEle);
+            for(int ele : arr)
+                arr.add(ele);
+            ans.add(ar);
+        }
+    }
+
+    public List<List<Integer>> threeSum(int[] arr, int target, int si, int ei) {
+        List<List<Integer>> ans = new ArrayList<>();
+        for(int i = si; i < ei;){
+            List<List<Integer>> smallAns = twoSum_(arr, target - arr[i], i + 1, ei);
+            prepareAns(ans, smallAns, arr[i]);
+            i++;
+            while(i < ei && arr[i] == arr[i - 1])
+                i++;
+        }
+
+        return ans;
     }
 }
