@@ -189,4 +189,118 @@ public class questionsTree {
 
         return -1;
     }
+
+    //=======================================================================
+
+    //Leetcode 543
+    public int diameterOfBinaryTree_01(TreeNode root) { 
+        if(root == null)
+            return -1;
+
+        int leftTreeDia = diameterOfBinaryTree(root.left);
+        int rightTreeDia = diameterOfBinaryTree(root.right);
+
+        int leftHeight = height(root.left);
+        int rightHeight = height(root.right);
+
+        return Math.max(Math.max(leftTreeDia, rightTreeDia), leftHeight + rightHeight + 2);
+    }
+
+    // {dia, height}
+    public int[] diameterOfBinaryTree_02(TreeNode root){
+        if(root == null)    
+            return new int[]{-1, -1};
+
+        int[] leftAns = diameterOfBinaryTree_02(root.left);
+        int[] rightAns = diameterOfBinaryTree_02(root.right);
+
+        int[] ans = new int[2];
+        ans[0] = Math.max(Math.max(leftAns[0], rightAns[0]), leftAns[1] + rightAns[1] + 2);
+        ans[1] = Math.max(leftAns[1], rightAns[1]) + 1;
+
+        return ans;
+    }
+
+    int maxDia = 0;
+    public int diameterOfBinaryTree_03(TreeNode root){
+        if(root == null)    
+            return -1;
+
+        int leftHeight = diameterOfBinaryTree_03(root.left);
+        int rightHeight = diameterOfBinaryTree_03(root.right);
+
+        maxDia = Math.max(maxDia, leftHeight + rightHeight + 2);
+
+        return Math.max(leftHeight, rightHeight) + 1;
+    }
+
+    //If the use of global variable is restricted
+    public int diameterOfBinaryTree_04(TreeNode root, int[] ans){
+        if(root == null)    
+            return -1;
+
+        int leftHeight = diameterOfBinaryTree_04(root.left, ans);
+        int rightHeight = diameterOfBinaryTree_04(root.right, ans);
+
+        ans[0] = Math.max(ans[0], leftHeight + rightHeight + 2);
+
+        return Math.max(leftHeight, rightHeight) + 1;
+    }
+
+    public int diameterOfBinaryTree(TreeNode root){
+        if(root == null)
+            return 0;
+        // return diameterOfBinaryTree_01(root);
+        // return diameterOfBinaryTree_02(root)[0];
+
+        int[] ans = new int[1];
+        diameterOfBinaryTree_04(root, ans);
+        return ans[0];
+    }
+
+    //Leetcode 112
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        if(root == null)
+            return false;
+        
+        if(root.left == null && root.right == null)
+            return targetSum - root.val == 0;
+        
+        return hasPathSum(root.left, targetSum - root.val) || hasPathSum(root.right, targetSum - root.val);
+    }
+
+    //Leetcode 113
+    public void pathSum(TreeNode root, int targetSum, List<List<Integer>> res, List<Integer> smallAns) {
+        if(root == null)
+            return;
+        
+        if(root.left == null && root.right == null){
+            if(targetSum - root.val == 0){
+                ArrayList<Integer> base = new ArrayList<>(smallAns);
+                base.add(root.val);
+                res.add(base);
+            }
+            
+            return;
+        }
+            
+        smallAns.add(root.val);
+        
+        pathSum(root.left, targetSum - root.val, res, smallAns);
+        pathSum(root.right, targetSum - root.val, res, smallAns);
+        
+        smallAns.remove(smallAns.size() - 1);
+        
+    }
+    
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> smallAns = new ArrayList<>();
+        
+        pathSum(root, targetSum, res, smallAns);
+        
+        return res;
+    }
+
+    
 }
