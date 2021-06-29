@@ -302,5 +302,32 @@ public class questionsTree {
         return res;
     }
 
+    //Maximum Path Sum between 2 Leaf Nodes 
+    int maxLeafToLeaf = -(int)1e9;
+    int maxPathSum_(Node root){ 
+        if(root == null)
+            return -(int)1e9;
+            
+        if(root.left == null && root.right == null)
+            return root.data;
+            
+        int LNTLMS = maxPathSum_(root.left);
+        int RNTLMS = maxPathSum_(root.right);
+    
+        if(root.left != null && root.right != null)        
+            maxLeafToLeaf = Math.max(maxLeafToLeaf, LNTLMS + RNTLMS + root.data);
+            
+        return Math.max(LNTLMS, RNTLMS) + root.data;
+    }
+    
+    int maxPathSum(Node root){
+        // if(root == null)
+        //     return Integer.MIN_VALUE;
+            
+        maxPathSum_(root);
+        return maxLeafToLeaf;
+    }
+
+    //Leetcode 124
     
 }
