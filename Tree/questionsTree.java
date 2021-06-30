@@ -303,6 +303,16 @@ public class questionsTree {
     }
 
     //Maximum Path Sum between 2 Leaf Nodes 
+    class Node{
+        int data;
+        Node left, right;
+
+        Node(int item){
+            data = item;
+            left = right = null;
+        }
+    } 
+
     int maxLeafToLeaf = -(int)1e9;
     int maxPathSum_(Node root){ 
         if(root == null)
@@ -329,5 +339,65 @@ public class questionsTree {
     }
 
     //Leetcode 124
-    
+    int maxNTN = -(int)1e9;
+    public int maxPathSum_(TreeNode root) {
+        if(root == null)
+            return 0;
+
+        int leftMaxPathSum = maxPathSum_(root.left);
+        int rightMaxPathSum = maxPathSum_(root.right);
+
+        int maxSumTillRoot = Math.max(leftMaxPathSum, rightMaxPathSum) + root.val;
+        maxNTN = Math.max(Math.max(maxNTN, maxSumTillRoot), Math.max(root.val, leftMaxPathSum + root.val + rightMaxPathSum));
+
+        return Math.max(maxSumTillRoot, root.val);
+    }
+
+    public int maxPathSum(TreeNode root) {
+        if(root == null)
+            return 0;
+
+        maxPathSum_(root);
+        return maxNTN;
+    }
+
+    //Leetcode 98
+    public class BSTpair{
+        boolean isBST = true;
+        long max = -(long)1e13;
+        long min = (long)1e13;
+
+        BSTpair(boolean isBST, long max, long min){
+            this.isBST = isBST;
+            this.max = max;
+            this.min = min;
+        }
+
+        BSTpair() {
+
+        }
+    }
+
+    public BSTpair isValidBST_(TreeNode root) {
+        if(root == null)
+            return new BSTpair();
+
+        BSTpair lres = isValidBST_(root.left);
+        BSTpair rres = isValidBST_(root.right);
+
+        BSTpair myres = new BSTpair();
+        myres.isBST = lres.isBST && rres.isBST && lres.max < root.val && root.val < rres.min;
+
+        if(!myres.isBST)
+            return myres;
+
+        myres.max = Math.max(rres.max, root.val);
+        myres.min = Math.min(lres.min, root.val);
+
+        return myres;
+    }
+
+    public boolean isValidBST(TreeNode root){
+        return isValidBST_(root).isBST;
+    }
 }
