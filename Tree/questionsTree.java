@@ -400,4 +400,38 @@ public class questionsTree {
     public boolean isValidBST(TreeNode root){
         return isValidBST_(root).isBST;
     }
+
+    //Leetcode 99
+    TreeNode a = null, b = null, prev = null;
+    public boolean recoverTree_(TreeNode root) {
+        if(root == null)
+            return true;
+
+        if(!recoverTree_(root.left))
+            return false;
+
+        if(prev != null && prev.val > root.val){
+            b = root;
+            if(a == null)
+                a = prev;
+            else 
+                return false;
+        }
+
+        prev = root;
+        if(!recoverTree_(root.right))
+            return false;
+
+        return true;
+    }
+
+    public void recoverTree(TreeNode root) {
+        recoverTree_(root);
+        if(a != null){
+            int temp = a.val;
+            a.val = b.val;
+            b.val = temp;
+        }
+    }
+
 }
