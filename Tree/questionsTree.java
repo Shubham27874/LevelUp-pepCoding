@@ -124,7 +124,7 @@ public class questionsTree {
         printKdown(node.right, depth - 1, block, ans);
     }
 
-    public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
+    public List<Integer> distanceK_(TreeNode root, TreeNode target, int k) {
         ArrayList<TreeNode> list = new ArrayList<>();
         rootToNodePath(root, target, list);
 
