@@ -2,7 +2,7 @@ package Tree;
 
 import java.util.*;
 
-public class questionsTree {
+public class questionsBinaryTree {
     public class TreeNode {
         int val;
         TreeNode left;
