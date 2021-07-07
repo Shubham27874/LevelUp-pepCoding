@@ -513,4 +513,166 @@ public class questionsBinaryTree {
             return null;
         }
     }
+
+    //Leetcode 105
+    // T -> avg : O(nlogn), worst : O(n^2).
+    public TreeNode preInTree(int[] preorder, int psi, int pei, int[] inorder, int isi, int iei){
+        if(psi > pei)
+            return null;
+
+        TreeNode node = new TreeNode(preorder[psi]);
+
+        int idx = isi;
+        while(inorder[idx] != preorder[psi]) 
+            idx++;
+
+        int tnoe = idx - isi;
+
+        node.left = preInTree(preorder, psi + 1, psi + tnoe, inorder, isi, idx - 1);
+        node.right = preInTree(preorder, psi + tnoe + 1, pei, inorder, idx + 1, iei);
+
+        return node;
+    }
+
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        return preInTree(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1);
+    }
+
+    //Leetcode 106
+    public TreeNode postInTree(int[] inorder, int isi, int iei, int[] postorder, int psi, int pei){
+        if(psi > pei)
+            return null;
+
+        TreeNode node = new TreeNode(postorder[pei]);
+        int idx = isi;
+        while(inorder[idx] != postorder[pei])
+            idx++;
+
+        int tnoe = idx - isi;
+
+        node.left = postInTree(inorder, isi, idx - 1, postorder, psi, psi + tnoe - 1);
+        node.right = postInTree(inorder, idx + 1, iei, postorder, psi + tnoe, pei - 1);
+
+        return node;
+    }
+
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        return postInTree(inorder, 0, inorder.length - 1, postorder, 0, postorder.length - 1);
+    }
+
+
+    //Leetcode 889
+    public TreeNode postPreTree(int[] post, int ppsi, int ppei, int[] pre, int psi, int pei) {
+        if (psi > pei)
+            return null;
+
+        TreeNode node = new TreeNode(pre[psi]);
+
+        if (psi == pei)
+            return node;
+
+        int idx = ppsi;
+        while (post[idx] != pre[psi + 1])
+            idx++;
+
+        int tnel = idx - ppsi + 1;
+        node.left = postPreTree(post, ppsi, idx, pre, psi + 1, psi + tnel);
+        node.right = postPreTree(post, idx + 1, ppei - 1, pre, psi + tnel + 1, pei);
+
+        return node;
+    }
+
+    public TreeNode constructFromPrePost(int[] pre, int[] post) {
+        int n = post.length;
+
+        return postPreTree(post, 0, n - 1, pre, 0, n - 1);
+    }
+
+    //Leetcode 114
+    //Time complexity : O(n^2)
+    public TreeNode getTail(TreeNode node){
+        if(node == null)
+            return null;
+
+        TreeNode curr = node;
+        while(curr.right != null){
+            curr = curr.right;
+        }
+
+        return curr;
+    }
+
+    public void flatten(TreeNode root) {
+        if(root == null) 
+            return;
+
+        flatten(root.left);
+        flatten(root.right);
+
+        TreeNode tail = getTail(root.left);
+        if(tail != null){
+            tail.right = root.right;
+            root.right = root.left;
+            root.left = null;
+        }
+    }
+
+    //Time complexity : O(n)
+    public TreeNode flatten_(TreeNode root){
+        if(root == null || (root.left == null && root.right == null))
+            return root;
+
+        TreeNode leftTail = flatten_(root.left);
+        TreeNode rightTail = flatten_(root.right);
+
+        if(leftTail != null){
+            leftTail.right = root.right;
+            root.right = root.left;
+            root.left = null;
+        }
+
+        return rightTail != null ? rightTail : leftTail;
+    }
+
+    public void flatten(TreeNode root) {
+        if(root == null) 
+            return;
+
+        flatten_(root);
+    }
+
+    //BinaryTree to DLL
+    Node dummy = new Node(-1);
+    Node previous = dummy;
+    public void binarToDLL(Node root){
+        if(root == null)
+            return;
+
+        binarToDLL(root.left);
+
+        previous.right = root;
+        root.left = previous;
+
+        previous = root;
+
+        binarToDLL(root.right);
+    }
+
+    Node bToDLL(Node root){
+        if(root == null)
+            return root;
+
+        binarToDLL(root);
+        Node head = dummy.right;
+        head.left = null;
+        dummy.right = null;
+
+        // previous.right = head;    //FOR CDLL
+        // head.left = previous;
+
+        return head;
+    }
+
+
+    
 }
