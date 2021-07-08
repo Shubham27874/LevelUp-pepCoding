@@ -1,6 +1,7 @@
 package Tree;
 
 import java.util.*;
+import java.util.LinkedList;
 
 public class questionsBinaryTree {
     public class TreeNode {
@@ -673,6 +674,262 @@ public class questionsBinaryTree {
         return head;
     }
 
+    //Leetcode 1008
+    public TreeNode bstPreOrderCreate(int[] preorder, int lr, int rr, int[] idx){
+        int i = idx[0];
+        if(i >= preorder.length || preorder[i] < lr || preorder[i] > rr)
+            return null;
 
+        TreeNode root = new TreeNode(preorder[i]);
+        idx[0]++;
+
+        root.left = bstPreOrderCreate(preorder, lr, root.val, idx);
+        root.right = bstPreOrderCreate(preorder, root.val, rr, idx);
+
+        return root;
+    }
+
+    public TreeNode bstFromPreorder(int[] preorder) {
+        int[] idx = new int[1];
+        int n = preorder.length;
+        return bstPreOrderCreate(preorder, -(int)1e9, (int)1e9, idx);
+    }
+
+    //PreOrder
+    //Deseliarize
+    int idx = 0;
+    public TreeNode Deseliarize(int[] arr){
+        if(idx == arr.length || arr[idx] == -1){
+            idx++;
+            return null;
+        }
+
+        TreeNode node = new TreeNode(arr[idx]);
+        node.left = Deseliarize(arr);
+        node.right = Deseliarize(arr);
+
+        return node;
+    }
+
+
+    //Serialize
+    public String serializeTree(TreeNode node, ArrayList<Integer> res){
+        if(node == null){
+            res.add(-1);
+            return "";
+        }
+
+        res.add(node.val);
+        serializeTree(node.left, res);
+        serializeTree(node.right, res);
+
+        return res.toString();
+    }
     
+    public class Codec {
+
+        // Encodes a tree to a single string.
+        public void serialize(TreeNode node, StringBuilder sb){
+            if(node == null)
+                return;
+
+            sb.append(node.val + " ");
+            serialize(node.left, sb);
+            serialize(node.right, sb);
+        }
+
+        public String serialize(TreeNode root) {
+            StringBuilder sb = new StringBuilder();
+            serialize(root, sb);
+
+            return sb.toString();
+        }
+    
+        // Decodes your encoded data to tree.
+        public TreeNode bstPreOrderCreate(int[] preorder, int lr, int rr, int[] idx){
+            int i = idx[0];
+            if(i >= preorder.length || preorder[i] < lr || preorder[i] > rr)
+                return null;
+    
+            TreeNode root = new TreeNode(preorder[i]);
+            idx[0]++;
+    
+            root.left = bstPreOrderCreate(preorder, lr, root.val, idx);
+            root.right = bstPreOrderCreate(preorder, root.val, rr, idx);
+    
+            return root;
+        }
+
+        public TreeNode deserialize(String data) {
+            if(data.equals(""))
+                return null;
+
+            String[] arr = data.split(" ");
+            int[] preorder = new int[arr.length];
+
+            for(int i = 0; i < arr.length; i++){
+                preorder[i] = Integer.parseInt(arr[i]);
+            }
+
+            int[] idx = new int[1];
+            return bstPreOrderCreate(preorder, -(int)1e9, (int)1e9, idx);
+        }
+    }
+
+    public static TreeNode rightMostNode(TreeNode next, TreeNode curr){
+        while(next.right != null && next.right != curr)
+            next = next.right;
+
+        return next;
+    }
+
+
+    public static void morrisTraversalInorder(TreeNode root){
+        TreeNode curr = root;
+        while(curr != null){
+            TreeNode next = curr.left;
+            if(next == null){
+                System.out.println(curr.val + " ");
+                curr = curr.right;
+            } else {
+                TreeNode rightMost = rightMostNode(next, curr);
+                if(rightMost.right == null){  //thread create
+                    rightMost.right = curr;
+                    curr = curr.left;
+                } else {   //thread break
+                    rightMost.right = null;
+                    System.out.println(curr.val + " ");
+                    curr = curr.right;
+                }
+            }
+        }        
+    }
+
+    public static void morrisTraversalPreorder(TreeNode root){
+        TreeNode curr = root;
+        while(curr != null){
+            TreeNode next = curr.left;
+            if(next == null){
+                System.out.println(curr.val + " ");
+                curr = curr.right;
+            } else {
+                TreeNode rightMost = rightMostNode(next, curr);
+                if(rightMost.right == null){  //thread create
+                    rightMost.right = curr;
+                    System.out.println(curr.val + " ");
+                    curr = curr.left;
+                } else {   //thread break
+                    rightMost.right = null;
+                    curr = curr.right;
+                }
+            }
+        }        
+    }
+
+
+    public static class tPair{
+        TreeNode node = null;
+        boolean leftdone = false;
+        boolean selfdone = false;
+        boolean rightdone = false;
+
+        tPair(TreeNode node, boolean leftdone , boolean selfdone, boolean rightdone){
+            this.node = node;
+            this.leftdone = leftdone;
+            this.selfdone = selfdone;
+            this.rightdone = rightdone;    
+        }
+    }
+
+    public static void IterTraversal(TreeNode root){
+        LinkedList<tPair> st = new LinkedList<>();
+        st.addFirst(new tPair(root, false, false, false));
+
+        while(st.size() != 0){
+            tPair pair = st.getFirst();
+            if(!pair.leftdone){
+                pair.leftdone = true;
+                if(pair.node.left != null)
+                    st.addFirst(new tPair(pair.node.left, false, false, false));
+            } else if(!pair.selfdone){
+                pair.selfdone = true;
+                System.out.println(pair.node.val + " ");
+            } else if(!pair.rightdone){
+                pair.rightdone = true;
+                if(pair.node.right != null)
+                    st.addFirst(new tPair(pair.node.right, false, false, false));
+            } else {
+                st.removeFirst();
+            }
+        }
+    }
+
+    //GFG - BST from PostOrder Traversal
+    public static Node constructTree(int post[],int n)
+    {
+        int[] idx = new int[1];
+        idx[0] = n - 1;
+        return bstPostOrderCreate(post, -(int)1e9, (int)1e9, idx);
+    }
+    
+    public static Node bstPostOrderCreate(int[] post, int lr, int rr, int[] idx){
+        int i = idx[0];
+        if(i <= -1 || post[i] < lr || post[i] > rr)
+            return null;
+    
+        Node root = new Node(post[i]);
+        idx[0]--;
+        
+        root.right = bstPostOrderCreate(post, root.data, rr, idx);
+        root.left = bstPostOrderCreate(post, lr, root.data, idx);
+    
+        
+        return root;
+    }
+
+    public static class levelPair{
+        TreeNode par = null;
+        int lb = -(int)1e8;
+        int rb = (int)1e8;
+
+        levelPair(TreeNode par, int lb, int rb){
+            this.par = par;
+            this.lb = lb;
+            this.rb = rb;
+        }
+
+        levelPair(){
+
+        }
+    }
+
+    public static TreeNode constructBSTfromLevelOrder(int[] arr){
+        int idx = 0;
+        LinkedList<levelPair> que = new LinkedList<>();
+        que.addFirst(new levelPair());
+        TreeNode root = null;
+
+        while(que.size() != 0 || idx < arr.length){
+            levelPair pair = que.removeFirst();
+
+            if(arr[idx] < pair.lb || arr[idx] > pair.rb)
+                continue;
+
+            TreeNode node = new TreeNode(arr[idx++]);
+            if(pair.par == null){
+                root = node;
+            } else {
+                if(node.val < pair.par.val)
+                    pair.par.left = node;
+                else    
+                    pair.par.right= node;
+            }
+
+            que.addFirst(new levelPair(node, pair.lb, node.val));
+            que.addFirst(new levelPair(node, node.val, pair.rb));
+        }
+
+        return root;
+    }
+
 }
