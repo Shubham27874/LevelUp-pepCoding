@@ -171,7 +171,7 @@ public class questionsBinaryTree {
         return ans;
     }
     
-    public int rootToNodeDistance(TreeNode node, TreeNode data){
+    public int rootToNodeDistance(TreeNode node, TreeNode data){  //depth
         if(node == null)
             return -1;
             
@@ -189,6 +189,59 @@ public class questionsBinaryTree {
         }
 
         return -1;
+    }
+
+    public void printKdown(TreeNode node, TreeNode block, int time, List<List<Integer>> ans){
+        if(node == null || node == block)
+            return;
+
+        if(ans.size() == time){
+            ans.add(new ArrayList<>());
+        }
+
+        ans.get(time).add(node.val);
+        printKdown(node.left, block, time + 1, ans);
+        printKdown(node.right, block, time + 1, ans);
+    }
+
+    public List<List<Integer>> burningTree(TreeNode node, int data){
+        ArrayList<TreeNode> list = new ArrayList<>();
+        list = rootToNodePath(node, data);
+
+        List<List<Integer>> ans = new ArrayList<>();
+        TreeNode block = null;
+
+        for(int i = 0; i < list.size(); i++){
+            printKdown(list.get(i), block, i, ans);
+            block = list.get(i);
+        }
+
+        return ans;
+    }   
+
+    public int burningTree2(TreeNode node, TreeNode target, List<List<Integer>> ans){
+        if(node == null)
+            return -1;
+
+        if(node == target){
+            printKdown(node, null, 0, ans);
+            return 1;
+        }
+
+        int time = -1;
+        int lans = burningTree2(node.left, target, ans);
+        if(lans != -1){
+            printKdown(node, node.left, time, ans);
+            time++;
+        }
+        
+        int rans = burningTree2(node.right, target, ans);
+        if(rans != -1){
+            printKdown(node, node.right, time, ans);
+            time++;
+        }
+
+        return time;
     }
 
     //=======================================================================
