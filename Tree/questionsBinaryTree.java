@@ -960,4 +960,82 @@ public class questionsBinaryTree {
         return root;
     }
 
+    //Leetcode 968
+    // -1 : camera required
+    // 0 : I'm covered
+    // 1 : I'm a camera 
+    int camera = 0;
+    public int minCameraCover_(TreeNode root) {
+        if(root == null)
+            return 0;
+        
+        int lans = minCameraCover_(root.left);
+        int rans = minCameraCover_(root.right);
+
+        if(lans == -1 || rans == -1){
+            camera++;
+            return 1;
+        }
+
+        if(lans == 1 || rans == 1)
+            return 0;
+
+        return -1;
+    }
+
+    public int minCameraCover(TreeNode root) {
+        int ans = minCameraCover_(root);
+        if(ans == -1)
+            return camera + 1;
+
+        return camera;
+    }
+
+    //Leetcode 337
+    public int[] rob_(TreeNode root) {
+        if(root == null)
+            return new int[]{0, 0};
+
+        int[] lans = new int[2];
+        int[] rans = new int[2];
+
+        lans = rob_(root.left);
+        rans = rob_(root.right);
+
+        int[] myAns = new int[2];
+        myAns[0] = lans[1] + root.val + rans[1];
+        myAns[1] = Math.max(lans[0], lans[1]) + Math.max(rans[0], rans[1]);
+
+        return myAns;
+    }
+
+    public int rob(TreeNode root) {
+        if(root == null)
+            return 0;
+
+        int[] ans = new int[2];
+        ans = rob_(root);
+        
+        return Math.max(ans[0], ans[1]);
+    }
+
+    //Leetcode 230
+    public void insertLeftMost(LinkedList<TreeNode> st, TreeNode node){
+        while(node != null){
+            st.addFirst(node);
+            node = node.left;
+        }
+    }
+
+    public int kthSmallest(TreeNode root, int k) {
+        LinkedList<TreeNode> st = new LinkedList<>();
+        insertLeftMost(st, root);
+
+        while(k-- > 1){
+            TreeNode rn = st.removeFirst();
+            insertLeftMost(st, rn.right);
+        }
+
+        return st.peek().val;
+    }
 }
