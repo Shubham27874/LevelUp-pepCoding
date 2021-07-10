@@ -173,4 +173,61 @@ public class GTree {
 
         return time;
     }
+
+    public static void linewiseLevelOrder(Node node){
+        LinkedList<Node> que = new LinkedList<>();
+        que.addLast(node);
+        int level = 0;
+
+        while(que.size() != 0){
+            int sz = que.size();
+            System.out.print("Level : " + level + " -> ");
+
+            while(sz-- > 0){
+                Node rn = que.removeFirst();
+                System.out.print(rn.val + " ");
+
+                for(Node child : rn.childs){
+                    que.addLast(child);
+                }
+            }
+
+            level++;
+            System.out.println();
+        }
+    }
+
+    public static boolean isMirror(Node node1, Node node2){
+        if(node1.childs.size() != node2.childs.size())
+            return false;
+            
+        if(node1.val != node2.val)
+            return false;
+
+        for(int i = 0, j = node1.childs.size() - 1; j >= 0; i++, j--){
+            Node child1 = node1.childs.get(i);
+            Node child2 = node2.childs.get(j);
+            if(!isMirror(child1, child2))
+                return false;
+        }
+
+        return true;
+    }
+
+    public static Node flattern(Node node){
+        if(node.childs.size() == 0)
+            return node;
+
+        int n = node.childs.size();
+        Node lchild = node.childs.get(n - 1);
+        Node gTail = flattern(lchild);
+
+        for(int i = n - 2; i >= 0; i--){
+            Node tempTail = flattern(node.childs.get(i));
+            tempTail.childs.add(node.childs.get(i + 1));
+            node.childs.remove(i + 1);
+        }
+
+        return gTail;
+    }
 }
