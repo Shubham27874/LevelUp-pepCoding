@@ -1020,22 +1020,60 @@ public class questionsBinaryTree {
     }
 
     //Leetcode 230
-    public void insertLeftMost(LinkedList<TreeNode> st, TreeNode node){
+    public void insertAllLeft(LinkedList<TreeNode> st, TreeNode node){
         while(node != null){
             st.addFirst(node);
             node = node.left;
         }
     }
 
+    //O(logn)
     public int kthSmallest(TreeNode root, int k) {
         LinkedList<TreeNode> st = new LinkedList<>();
-        insertLeftMost(st, root);
+        insertAllLeft(st, root);
 
         while(k-- > 1){
             TreeNode rn = st.removeFirst();
-            insertLeftMost(st, rn.right);
+            insertAllLeft(st, rn.right);
         }
 
         return st.peek().val;
+    }
+
+    //Leetcode 1372 - to be done
+
+    //Leetcode 653
+    public void insertAllRight(LinkedList<TreeNode> st, TreeNode node){
+        while(node != null){
+            st.addFirst(node);
+            node = node.right;
+        }
+    }
+
+    public boolean findTarget(TreeNode root, int k) {
+        if(root == null)
+            return false;
+
+        LinkedList<TreeNode> lst = new LinkedList<>();
+        LinkedList<TreeNode> rst = new LinkedList<>();
+
+        insertAllLeft(lst, root);
+        insertAllRight(rst, root);
+
+        while(lst.peek().val < rst.peek().val){
+            int sum = lst.peek().val + rst.peek().val;
+            
+            if(sum == k)
+                return true;
+            else if(sum < k){
+                TreeNode lrn = lst.removeFirst();
+                insertAllLeft(lst, lrn.right); 
+            } else {
+                TreeNode rrn = rst.removeFirst();
+                insertAllLeft(rst, rrn.right); 
+            }
+        }
+
+        return false;
     }
 }
