@@ -41,7 +41,24 @@ public class questionsBinaryTree {
         return find(node.left, data) || find(node.right, data);
     }
 
-    public boolean rootToNodePath(TreeNode node, TreeNode data, ArrayList<TreeNode> ans){
+    public boolean rootToNodePath01(TreeNode node, TreeNode data, ArrayList<TreeNode> ans){
+        if(node == null)
+            return false;
+
+        ans.add(node);
+
+        if(node == data)
+            return true;
+
+        if(rootToNodePath01(node.left, data, ans) || rootToNodePath01(node.right, data, ans))
+            return true;
+
+        ans.remove(ans.size() - 1);
+
+        return false;
+    }
+
+    public boolean rootToNodePath02(TreeNode node, TreeNode data, ArrayList<TreeNode> ans){
         if(node == null)
             return false;
 
@@ -50,7 +67,7 @@ public class questionsBinaryTree {
             return true;
         }
         
-        boolean res = rootToNodePath(node.left, data, ans) || rootToNodePath(node.right, data, ans);
+        boolean res = rootToNodePath02(node.left, data, ans) || rootToNodePath02(node.right, data, ans);
 
         if(res)
             ans.add(node);
@@ -91,8 +108,8 @@ public class questionsBinaryTree {
         ArrayList<TreeNode> listOne = new ArrayList<>();
         ArrayList<TreeNode> listTwo = new ArrayList<>(); 
 
-        rootToNodePath(root, p, listOne);
-        rootToNodePath(root, q, listTwo);
+        rootToNodePath02(root, p, listOne);
+        rootToNodePath02(root, q, listTwo);
 
         int i = listOne.size() - 1;
         int j = listTwo.size() - 1;
@@ -127,7 +144,7 @@ public class questionsBinaryTree {
 
     public List<Integer> distanceK_(TreeNode root, TreeNode target, int k) {
         ArrayList<TreeNode> list = new ArrayList<>();
-        rootToNodePath(root, target, list);
+        rootToNodePath02(root, target, list);
 
         List<Integer> ans = new ArrayList<>();
 
@@ -140,7 +157,7 @@ public class questionsBinaryTree {
         return ans;
     }
 
-    //Better Solution
+    //Better Solution  
     public int distanceK2(TreeNode node, TreeNode target, int k, List<Integer> ans){
         if(node == null)
             return -1;
