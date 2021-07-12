@@ -1038,6 +1038,35 @@ public class questionsBinaryTree {
         }
 
         return st.peek().val;
+    }   
+
+    public int kthSmallest_(TreeNode root, int k){
+        TreeNode curr = root;
+        while(curr != null){
+            TreeNode next = curr.left;
+
+            if(next == null){
+                if(k == 1)
+                    return curr.val;
+                k--;
+                curr = curr.right;
+
+            } else {
+                TreeNode rightMost = rightMostNode(next, curr);
+                if(rightMost.right == null){  //thread create
+                    rightMost.right = curr;
+                    curr = curr.left;
+                } else {   //thread break
+                    rightMost.right = null;
+                    if(k == 1)
+                        return curr.val;
+                    k--;
+                    curr = curr.right;
+                }
+            }
+        } 
+
+        return -1;
     }
 
     //Leetcode 1372 - to be done
@@ -1076,4 +1105,75 @@ public class questionsBinaryTree {
 
         return false;
     }
+
+    // Leetcode 437
+    int ans = 0;
+    public void pathSumIII(TreeNode root, HashMap<Integer, Integer> map, int tar, int prefixSum) {
+        if(root == null)
+            return;
+
+        prefixSum += root.val;
+        ans += map.getOrDefault(prefixSum - tar, 0);
+
+        map.put(prefixSum, map.getOrDefault(prefixSum, 0) + 1);
+
+        pathSumIII(root.left, map, tar, prefixSum);
+        pathSumIII(root.right, map, tar, prefixSum);
+
+        map.put(prefixSum, map.get(prefixSum) - 1);
+        if(map.get(prefixSum) == 0)
+            map.remove(prefixSum);
+    }
+
+    public int pathSum(TreeNode root, int tar) {
+        //     (prefixSUm , frequency)
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(0, 1);
+        pathSumIII(root, map, tar, 0);
+        return ans;
+    }
+
+    //Leetcode 662
+    public class pair{
+        TreeNode node = null;
+        long w = 0;
+
+        pair(TreeNode node, long w){
+            this.node = node;
+            this.w = w;
+        }
+    }
+    public int widthOfBinaryTree(TreeNode root) {
+        if(root == null)
+            return 0;
+
+        LinkedList<pair> que = new LinkedList<>();
+        que.addLast(new pair(root, 1));
+        int ans = 0;
+
+        while(que.size() != 0){
+            int sz = que.size();
+            long fi = que.getFirst().w;
+            long li = que.getFirst().w;
+
+            while(sz-- > 0){
+                pair p = que.removeFirst();
+                
+                TreeNode node = p.node;
+                long w = p.w;
+                li = w;
+
+                if(node.left != null)
+                    que.addLast(new pair(node.left, 2 * w));
+                
+                if(node.right != null)
+                    que.addLast(new pair(node.right, 2 * w + 1));
+            }
+
+            ans = Math.max(ans, (int)(li - fi + 1));
+        }
+
+        return ans;
+    }
+
 }
