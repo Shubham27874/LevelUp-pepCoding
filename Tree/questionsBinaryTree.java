@@ -465,7 +465,7 @@ public class questionsBinaryTree {
         }
 
         prev = root;
-        if(!recoverTree_(root.right))
+        if(!recoverTree_(root.right))  //sdf
             return false;
 
         return true;
