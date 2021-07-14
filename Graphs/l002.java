@@ -1,33 +1,64 @@
 package Graphs;
+import java.util.*;
 
 public class l002 {
-    public static int hamiltonianCycleandPath(int src, int osrc, boolean[] vis, String psf, int totalNoedges){
-        if(totalNoedges == N - 1){
-            int idx = findEdge(osrc, src);
-            if(idx != -1)
-                System.out.println("Cycle: " + psf + src);
-            else
-                System.out.println("Path: " + psf + src);
-                System.out.println();
+    public static class Edge {
+        int v = 0;
+        int w = 0;
+
+        Edge(int v, int w){
+            this.v = v;
+            this.w = w;
         }
-        
-        int count = 0;
-        vis[src] = true;
-        for(Edge e : graph[src]){
-            if(!vis[e.v]){
-                count += hamiltonianCycleandPath(e.v, osrc, vis, psf + src + " ", totalNoedges + 1);
+    }
+
+    static int N = 7;
+
+    @SuppressWarnings("unchecked")
+    static ArrayList<Edge>[] graph = new ArrayList[N];
+
+    public static int findEdge(int u, int v){
+        int idx = -1;
+
+        for(int i = 0; i < graph[u].size(); i++){
+            if(graph[u].get(i).v == v){
+                idx = i;
+                break;
             }
         }
+
+        return idx;    //will return the value of "v" for the given "u";
+    }
+
+    public static int hamiltonianCycleandPath(int src, int osrc, boolean[] vis, String psf, int totalNoedges){
+        if(totalNoedges == N - 1) {
+            int idx = findEdge(src, osrc);
+            if(idx != -1)
+                System.out.print("Cycle" + psf + src + " ");
+            else
+                System.out.print("Path" + psf + src + " ");
+
+            System.out.println();
+            return 1;
+        }
+
+        vis[src] = true;
+        int count = 0;
+        for(Edge e : graph[src]){
+            if(!vis[e.v])
+                count += hamiltonianCycleandPath(e.v, osrc, vis, psf + src, totalNoedges + 1);
+        }
+
         vis[src] = false;
         return count;
     }
 
     public static void hamiltonianCycleandPath(int src){
         boolean[] vis = new boolean[N];
-        hamiltonianCycleandPath(0, 0, vis, " ", 0);
+        hamiltonianCycleandPath(src, src, vis, " ", 0);
     }   
 
-    public static void dfs(int src, boolean[] vis, List<Integer> ans){ 
+    public static void dfs(int src, boolean[] vis, ArrayList<Integer> ans){ 
         
         vis[src] = true;
 
@@ -37,13 +68,12 @@ public class l002 {
         }
 
         vis[src] = false;
-
         ans.add(src);
     }
 
     public static int gcc(){
-        List<List<Integer>> res = new ArrayList<>();
-        List<Integer> ans = new ArrayLsit<>();
+        ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+        ArrayList<Integer> ans = new ArrayList<>();
         boolean[] vis = new boolean[N];
         int components = 0;
 
