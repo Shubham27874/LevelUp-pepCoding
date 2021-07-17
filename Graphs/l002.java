@@ -236,6 +236,102 @@ public class l002 {
         }
     }
 
+    //Leetcode 1091
+    public int shortestPathBinaryMatrix(int[][] grid) {
+        int n = grid.length;
+        int m = n;
+        
+        if(n < 0 || m < 0)
+            return -1;
+
+        if(grid[0][0] == 1 || grid[n - 1][n - 1] == 1)
+            return -1;
+
+        LinkedList<Integer> que = new LinkedList<>();
+
+        int[][] dir = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+
+        grid[0][0] = 1;
+        que.push(0);
+
+        int level = 1;
+        while(que.size() != 0){
+            int sz = que.size();
+            while(sz-- > 0){
+                int idx = que.removeFirst();
+
+                int r = idx / m;
+                int c = idx % m;
+
+                if(r == n - 1 && c == m - 1){
+                    return level;
+                }
+
+                for(int d = 0; d < dir.length; d++){
+                    int x = r + dir[d][0];
+                    int y = c + dir[d][1];
+
+                    if(x >= 0 && y >= 0 && x < n && y < m && grid[x][y] == 0){
+                        grid[x][y] = 1;
+                        que.addLast(x * m + y);
+                    }
+                }
+            }
+
+            level++;
+        }
+
+        return -1;
+    }
+
+    //Leetcode 785
+    public boolean isBipartite_(int[][] graph, int[] vis, int src) {
+        LinkedList<Integer> que = new LinkedList<>();
+        que.addLast(src);
+
+        int color = 0;  // 0 : red, 1 : green
+        boolean isCycle = false;
+
+        while(que.size() != 0){
+            int sz = que.size();
+            while(sz-- > 0){
+                int rvtx = que.removeFirst();
+
+                if(vis[rvtx] != -1){
+                    isCycle = true;
+                    if(vis[rvtx] != color) return false;
+
+                    continue;
+                }
+
+                vis[rvtx] = color;
+                for(int v : graph[rvtx]){
+                    if(vis[v] == -1)
+                        que.addLast(v);
+                }
+            }
+            color = (color + 1) % 2;
+        }
+
+        return true;
+    }
+
+    public boolean isBipartite(int[][] graph) {
+        int n = graph.length;
+        // -1 : not visited, 0 : red, 1 : green
+        int[] vis = new int[n];
+        Arrays.fill(vis, -1);
+
+        boolean res = true;
+        for(int i = 0; i < n; i++){
+            if(vis[i] == -1){
+                res = res && isBipartite_(graph, vis, i);
+            }
+        }
+
+        return res;
+    }
+
     public static void main(String[] args){
         hamiltonianCycleandPath(0);
     }
