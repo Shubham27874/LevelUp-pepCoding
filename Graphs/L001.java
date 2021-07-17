@@ -139,8 +139,134 @@ public class l001 {
         return myAns;
     }
 
-    
+    public static void BFS_Cycle(int src, boolean[] vis){
+        LinkedList<Integer> que = new LinkedList<>();
+        que.addLast(src);
+        
+        int dest = 6;
+        int atLevel = -1;
 
+        boolean isCycle = false;
+        int level = 0;
+
+        while(que.size() != 0){
+            int sz = que.size();
+            System.out.print("Level :" + " ");
+
+            while(sz-- > 0){
+                int rvtx = que.removeFirst();
+                System.out.print(rvtx + " ");
+                
+                if(vis[rvtx]){
+                    isCycle = true;
+                    continue;
+                }
+
+                if(rvtx == dest){
+                    atLevel = level;
+                }
+
+                vis[rvtx] = true;
+                for(Edge e : graph[rvtx]){
+                    if(!vis[e.v])
+                        que.addLast(e.v);
+                }
+            }
+            level++;
+            System.out.println();
+        }
+
+        System.out.println(dest + " " + "present at" + " " + atLevel);
+        System.out.println("isCycle" + " " + isCycle);
+    }
+
+    public static void BFS_shortestPath(int src, boolean[] vis){
+        LinkedList<Integer> que = new LinkedList<>();
+        que.addLast(src);
+        
+        int dest = 6;
+        int atLevel = -1;
+        int level = 0;
+
+        vis[src] = true;
+
+        while(que.size() != 0){
+            int sz = que.size();
+
+            while(sz-- > 0){
+                int rvtx = que.removeFirst();
+               
+                for(Edge e : graph[rvtx]){
+                    if(!vis[e.v]){
+                        vis[e.v] = true;
+                        que.addLast(e.v);
+                    }
+
+                    if(e.v == dest){
+                        atLevel = level + 1;
+                    }
+                }
+            }
+            level++;
+        }
+
+        System.out.println(dest + " " + "present at" + " " + atLevel);
+    }
+
+    public static void BFS_printShortestPath(int src, boolean[] vis){
+        LinkedList<Integer> que = new LinkedList<>();
+        que.addLast(src);
+        
+        int dest = 6;
+        int atLevel = -1;
+        int level = 0;
+
+        int[] par = new int[N];
+        Arrays.fill(par, -1);
+
+        vis[src] = true;
+
+        while(que.size() != 0){
+            int sz = que.size();
+
+            while(sz-- > 0){
+                int rvtx = que.removeFirst();
+               
+                for(Edge e : graph[rvtx]){
+                    if(!vis[e.v]){
+                        vis[e.v] = true;
+                        que.addLast(e.v);
+                        par[e.v] = rvtx;
+                    }
+
+                    if(atLevel == -1 && e.v == dest){
+                        atLevel = level + 1;
+                    }
+                }
+            }
+            level++;
+        }
+
+        System.out.println(dest + " " + "present at" + " " + atLevel);
+
+        int idx = dest;
+        while(idx != -1){
+            System.out.print(idx + "->");
+            idx = par[idx];
+        }
+    }
+
+    public static void BFS_GCC(){
+        boolean[] vis = new boolean[N];
+        int components = 0;
+
+        for(int i = 0; i < N; i++){
+            if(!vis[i]){
+                components++;
+                BFS_Cycle(i, vis);
+            }
+        }
+    }
 
     public static void main(String[] args){
         constructGraph();
