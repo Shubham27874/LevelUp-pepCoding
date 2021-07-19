@@ -332,6 +332,144 @@ public class l002 {
         return res;
     }
 
+    //Leetcode 994
+    public int orangesRotting(int[][] grid) {
+        int n = grid.length;
+        int m = grid[0].length;
+        
+        LinkedList<Integer> que = new LinkedList<>();
+        int[][] dir = {{0,1}, {0,-1}, {-1, 0}, {1,0}};
+        int time = 0;
+        int freshOranges = 0;
+
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(grid[i][j] == 2)
+                    que.addLast(i * m + j);
+                else if(grid[i][j] == 1)
+                    freshOranges++;
+            }
+        }
+
+        if(freshOranges == 0)
+            return 0;
+
+        while(que.size() != 0){
+            int sz = que.size();
+
+            while(sz-- > 0){
+                int idx = que.removeFirst();
+                int r = idx / m;
+                int c = idx % m;
+
+                for(int d = 0; d < dir.length; d++){
+                    int x = r + dir[d][0];
+                    int y = c + dir[d][1];
+
+                    if(x >= 0 && y >= 0 && x < n && y < m && grid[x][y] == 1){
+                        freshOranges--;
+                        grid[x][y] = 2;
+                        que.addLast(x * m + y);
+
+                        if(freshOranges == 0)
+                            return time + 1;
+                    }
+                }
+            }
+
+            time++;
+        }
+
+        return -1;
+    }
+
+    //286
+    void wallsAndGates(int[][] rooms){
+
+        int n = rooms.length;
+        int m = rooms[0].length;
+
+        int[][] dir = {{0, 1}, {0, -1}, {-1, 0}, {1, 0}};
+
+        LinkedList<Integer> que = new LinkedList<>();
+        int countOfRooms = 0, distance = 0;
+
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++)
+                if (rooms[i][j] == 0) // gates
+                    que.addLast(i * m + j);
+                else if (rooms[i][j] == 2147483647)
+                    countOfRooms++;
+
+        while (que.size() != 0){
+            int size = que.size();
+            while (size-- > 0){
+                int idx = que.removeFirst();
+                que.pop();
+                int r = idx / m;
+                int c = idx % m;
+
+                for (int d = 0; d < 4; d++){
+                    int x = r + dir[d][0];
+                    int y = c + dir[d][1];
+                    if (x >= 0 && y >= 0 && x < n && y < m && rooms[x][y] == 2147483647){
+                        countOfRooms--;
+                        rooms[x][y] = distance + 1;
+                        que.addLast(x * m + y);
+
+                        if (countOfRooms == 0)
+                            return;
+                }
+            }
+        }
+        distance++;
+    }
+
+    //Leetcode 207
+    public static ArrayList<Integer> khansAlgo(int N, ArrayList<Integer>[] graph){
+        int[] indegree = new int[N];
+        for(int i = 0; i < N; i++)
+            for(int e : graph[i])
+                indegree[e]++;
+
+        ArrayList<Integer> ans = new ArrayList<>();
+        LinkedList<Integer> que = new LinkedList<>();
+
+        for (int i = 0; i < N; i++)
+            if (indegree[i] == 0)
+                que.addLast(i);
+
+        int level = 0;
+        while(que.size() != 0){
+            int sz = que.size();
+            while(sz-- > 0){
+                int rvtx = que.removeFirst();
+
+                ans.add(rvtx);
+
+                for(int e : graph[rvtx]){
+                    if(--indegree[e] == 0)
+                    que.addLast(e);
+                }
+            }
+
+            level++;
+        }
+
+        return ans;
+    }
+
+    public boolean canFinish(int N, int[][] arr) {
+        @SuppressWarnings("unchecked")
+        ArrayList<Integer>[] graph = new ArrayList[N];
+        for(int[] ar : arr){
+            graph[ar[0]].add(ar[1]);
+        }
+
+        return khansAlgo(N, graph).size() == N;
+    }
+
+
     public static void main(String[] args){
         hamiltonianCycleandPath(0);
     }
