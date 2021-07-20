@@ -134,4 +134,39 @@ public class Directed {
         for(int ele : ans)
             System.out.print(ele + " ");
     }
+
+    public static boolean isCyclePresent_DFStopo(int src, int[] vis, ArrayList<Integer> ans){
+        vis[src] = 0;
+        boolean res = false;
+
+        for(Edge e : graph[src]){
+            if(vis[e.v] == -1){ //unvisited
+                res = res || isCyclePresent_DFStopo(e.v, vis, ans);
+            } else if(vis[src] == 0){
+                return true;  //cycle is present
+            }
+        }
+
+        vis[src] = 1;
+        ans.add(src);
+        return res;
+    }
+
+    public static ArrayList<Integer> isCyclePresent_DFS(){
+        int[] vis = new int[N];
+        Arrays.fill(vis, -1);
+        ArrayList<Integer> ans = new ArrayList<>();
+
+        boolean res = false;
+        for(int i = 0; i < N; i++){
+            if(vis[i] == -1){
+                res = res || isCyclePresent_DFStopo(i, vis, ans);
+            }
+        }
+
+        if(res)
+            ans.clear();
+
+        return ans;
+    }
 }
