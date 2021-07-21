@@ -169,4 +169,50 @@ public class Directed {
 
         return ans;
     }
+
+    public static void dfs_SCC(ArrayList<Edge>[] ngraph, int src, boolean[] vis, ArrayList<Integer> ans){
+        vis[src] = true;
+        for(Edge e : ngraph[src]){
+            if(!vis[e.v])   
+                dfs_SCC(ngraph, e.v, vis, ans);
+        }
+
+        ans.add(src);
+    }
+
+    public static void kosaraju(){
+        boolean[] vis = new boolean[N];
+        ArrayList<Integer> ans = new ArrayList<>();
+
+        for(int i = 0; i < N; i++){
+            if(!vis[i])
+                dfs_topo(i, vis, ans);
+        }
+
+        //Graph Inverse
+        @SuppressWarnings("unchecked")
+        ArrayList<Edge>[] ngraph = new ArrayList[N];
+        for(int i = 0; i < N; i++){
+            for(Edge e : graph[i]){
+                ngraph[e.v].add(new Edge(i, 1));
+            }
+        }
+
+        Arrays.fill(vis, false);
+        for(int i = ans.size() - 1; i >= 0; i--){
+            int ele = ans.get(i);
+            if(!vis[ele]){
+                ArrayList<Integer> scc = new ArrayList<>();
+                dfs_SCC(ngraph, ele, vis, scc);
+
+                for(int e : scc)
+                    System.out.print(e + " ");
+
+                System.out.println();
+            }
+        }
+    }
+
+    
+
 }
