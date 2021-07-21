@@ -519,8 +519,67 @@ public class l002 {
         return level;
     }
 
+    //Leetcode 684
+    static int[] par;
+
+    public int findPar(int u){
+        return par[u] == -1 ? u : (par[u] = findPar(par[u]));
+    }
+
+    public int[] findRedundantConnection(int[][] edges) {
+        int N = edges.length + 1;
+        par = new int[N];
+        Arrays.fill(par, -1);
+        
+        for(int[] edge : edges){
+            int p1 = findPar(edge[0]);
+            int p2 = findPar(edge[1]);
+
+            if(p1 != p2){
+                par[p1] = p2;
+            } else {
+                return edge;
+            }
+        }
+
+        return new int[0];
+    }
+
+    //Leetcode 1061
+    public static int findPar_(int u){
+        return par[u] == u ? u : (par[u] = findPar_(par[u]));
+    }
+
+    public static String smallestEquivaleString(String A, String B, String S){
+        par = new int[26];
+        for(int i = 0; i < 26; i++)
+            par[i] = i;
+
+        for(int i = 0; i < A.length(); i++){
+            int p1 = findPar_(A.charAt(i) - 'a');
+            int p2 = findPar_(B.charAt(i) - 'a');
+
+            par[p1] = Math.min(p1, p2);
+            par[p2] = Math.min(p1, p2);
+        }
+
+        StringBuilder ans = new StringBuilder();
+        for(int i = 0 ; i < S.length(); i++){
+            char ch = (char)(findPar_(S.charAt(i) - 'a') + 'a');
+            ans.append(ch);
+        }
+        
+        return ans.toString();
+    } 
+
     public static void main(String[] args){
-        hamiltonianCycleandPath(0);
+        // hamiltonianCycleandPath(0);
+        String A = "parker";
+        String B = "morris";
+        String S = "parser";
+        String res = new String();
+        res = smallestEquivaleString(A, B, S);
+        System.out.println(res);
     }
     
 }
