@@ -572,6 +572,82 @@ public class l002 {
         return ans.toString();
     } 
 
+    //Leetcode 839
+    public boolean isSimilar(String s1, String s2){
+        int count = 0;
+        for(int i = 0; i < s1.length(); i++){
+            if(s1.charAt(i) != s2.charAt(i) && ++count > 2)
+                return false;
+        }
+
+        return true;
+    }
+
+    public int numSimilarGroups(String[] strs) {
+        int count = strs.length;
+        int n = strs.length;
+
+        for(int i = 0; i < n; i++)
+            par[i] = i;
+
+        for(int i = 0; i < n; i++){
+            for(int j = i + 1; j < n; j++){
+                if(isSimilar(strs[i], strs[j])){
+                    int p1 = findPar_(i);
+                    int p2 = findPar_(j);
+
+                    if(p1 != p2){
+                        par[p1] = p2;
+                        count--;
+                    }
+                }
+            }
+        }
+
+        return count;
+    }
+
+    //Leetcode 305
+    public ArrayList<Integer> numIslands(int m, int n, int[][] positions){
+        par = new int[m * n];
+        Arrays.fill(par, -1);
+
+        int[][] dir = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        int[][] grid = new int[m][n];
+        int count = 0;
+        ArrayList<Integer> ans = new ArrayList<>();
+
+        for(int[] point : positions){
+            int i = point[0];
+            int j = point[1];
+
+            if(grid[i][j] != 1){
+
+                grid[i][j] = 1;
+                count++;
+
+                for(int d = 0; d < 4; d++){
+                    int x = i + dir[d][0];
+                    int y = j + dir[d][1];
+
+                    if(x >= 0 && y >= 0 && x < m && y < n && grid[x][y] == 1){
+                        int p1 = findPar(i * m + j);
+                        int p2 = findPar(x * m + y);
+
+                        if(p1 != p2){
+                            count--;
+                            par[p1] = p2;
+                        }
+                    }
+                }                
+            }
+
+            ans.add(count);
+        }
+
+        return ans;
+    }
+
     public static void main(String[] args){
         // hamiltonianCycleandPath(0);
         String A = "parker";
