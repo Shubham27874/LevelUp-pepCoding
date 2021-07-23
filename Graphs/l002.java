@@ -648,6 +648,81 @@ public class l002 {
         return ans;
     }
 
+    //Leetcode 1168
+    public int minCostToSupplyWater(int N, ArrayList<int[]> edges){
+        par = new int[N + 1];
+        for (int i = 0; i <= N; i++) {
+            par[i] = i;
+        }
+
+        int cost = 0;
+        for (int[] edge : edges) {
+            int u = edge[0], v = edge[1], w = edge[2];
+            int p1 = findPar(u);
+            int p2 = findPar(v);
+
+            if (p1 != p2) {
+                par[p1] = p2;
+                cost += w;
+            }
+        }
+
+        return cost;
+    }
+
+    public int minCostToSupplyWater(int n, int[] wells, int[][] pipes){
+        ArrayList<int[]> Pipes = new ArrayList<>();
+        for(int i = 0; i < n; i++){
+            Pipes.add(new int[] {0, i + 1, wells[i]});
+        }
+
+        for(int[] p : pipes){
+            Pipes.add(p);
+        }
+
+        Collections.sort(Pipes, (a, b) -> {
+            return a[2] - b[2];
+        });
+
+        return minCostToSupplyWater(n, Pipes);
+    }
+
+    //Leetcode 200
+    public int numIslands_(char[][] grid) {
+        int n = grid.length;
+        int m = grid[0].length;
+
+        for (int i = 0; i < n * m; i++)
+            par[i] = i;
+
+        int oncesCount = 0;
+        int[][] dir = {{1, 0}, {0, 1}};
+
+        for (int i = 0; i < n; i++){
+            for (int j = 0; j < m; j++){
+                if (grid[i][j] == '1'){
+        
+                    oncesCount++;
+                    for (int d = 0; d < 2; d++){
+                        int x = i + dir[d][0];
+                        int y = j + dir[d][1];
+
+                        if (x >= 0 && y >= 0 && x < n && y < m && grid[x][y] == '1'){
+                            int p1 = findPar(i * m + j);
+                            int p2 = findPar_(x * m + y);
+                            if (p1 != p2){
+                                par[p2] = p1;
+                                oncesCount--;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return oncesCount;
+    }
+
     public static void main(String[] args){
         // hamiltonianCycleandPath(0);
         String A = "parker";
