@@ -419,10 +419,11 @@ public class l002 {
 
                         if (countOfRooms == 0)
                             return;
+                    }
                 }
             }
+            distance++;
         }
-        distance++;
     }
 
     //Leetcode 207
