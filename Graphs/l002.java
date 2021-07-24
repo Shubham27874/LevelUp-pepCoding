@@ -724,6 +724,37 @@ public class l002 {
         return oncesCount;
     }
 
+    int[] size;
+    public long journeyToMoon(int n, List<List<Integer>> astronaut) {
+        par = new int[n];
+        size = new int[n];
+
+        for(int i = 0; i < n; i++){
+            par[i] = i;
+            size[i] = 1;
+        }
+    
+        for(List<Integer> ast : astronaut){
+            int p1 = findPar_(ast.get(0));
+            int p2 = findPar_(ast.get(1));
+
+            if(p1 != p2){
+                par[p1] = p2;
+                size[p2] += size[p1];
+            }
+        }
+
+        long sum = 0, totalPairs = 0;
+        for(int i = 0; i < n; i++){
+            if(par[i] == i){
+                totalPairs += sum * size[i];
+                sum += size[i];
+            }
+        }
+
+        return totalPairs;
+    }
+
     public static void main(String[] args){
         // hamiltonianCycleandPath(0);
         String A = "parker";
