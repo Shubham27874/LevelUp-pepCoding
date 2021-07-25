@@ -755,6 +755,59 @@ public class l002 {
         return totalPairs;
     }
 
+    //Leetcode 815
+    public int numBusesToDestination(int[][] routes, int src, int dest) {
+        if(src == dest)
+            return 0;
+
+        int n = routes.length;
+        HashMap<Integer, ArrayList<Integer>> busStandMapping = new HashMap<>();
+        int busNumber = 0;
+        for(int[] busStandList : routes){
+            for(int busStand : busStandList){
+                busStandMapping.get(busStand).add(busNumber);
+            }
+            busNumber++;
+        }
+        
+        HashSet<Integer> isBusStandSeen = new HashSet<>();
+        boolean[] isBusSeen = new boolean[n];
+
+        LinkedList<Integer> que = new LinkedList<>();
+        que.addLast(src);
+        isBusStandSeen.add(src);
+
+        int level = 0;
+        while(que.size() != 0){
+            int size = que.size();
+            while(size-- > 0){
+                int busStand = que.removeFirst();
+
+                ArrayList<Integer> allBuses = new ArrayList<>();
+                allBuses = busStandMapping.get(busStand);
+                for(int busNo : allBuses){
+                    if(isBusSeen[busNo])
+                        continue;
+
+                    for(int bs : routes[busNo]){
+                        if(isBusStandSeen.contains(bs) == isBusStandSeen.contains(isBusStandSeen.size() - 1)){
+                            que.addLast(bs);
+                            isBusStandSeen.add(bs);
+
+                            if(bs == dest)
+                                return level + 1;
+                        }
+                    }
+
+                    isBusSeen[busNo] = true;
+                }
+            }
+            level++;
+        }
+
+        return -1;
+    }
+
     public static void main(String[] args){
         // hamiltonianCycleandPath(0);
         String A = "parker";
