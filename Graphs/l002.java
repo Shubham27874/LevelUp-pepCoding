@@ -808,6 +808,59 @@ public class l002 {
         return -1;
     }
 
+    //Leetcode 743
+    public int networkDelayTime(int[][] times, int n, int k) {
+        ArrayList<int[]>[] graph = new ArrayList[n + 1];
+        for(int i = 0; i < n + 1; i++){
+            graph[i] = new ArrayList<>();
+        }
+
+        // u -> {v, w}
+        for(int[] ar : times){
+            graph[ar[0]].add(new int[] {ar[1], ar[2]});
+        }
+
+        int[] dis = new int[n + 1];
+        Arrays.fill(dis, (int)1e9);
+        boolean[] vis = new boolean[n + 1];
+
+        //{vtx, wsf}
+        PriorityQueue<int[]> que = new PriorityQueue<>((a, b) -> {
+            return a[1] - b[1];
+        });
+
+        que.add(new int[] {k, 0});
+        dis[k] = 0;
+        int noOfEdges = 0;
+        int maxValue = 0;
+
+        while(que.size() != 0){
+            int[] p = que.remove();
+            int vtx = p[0], wsf = p[1];
+
+            if(vis[vtx])
+                continue;
+
+            if(vtx != k)
+                noOfEdges++;
+
+            maxValue = Math.max(maxValue, wsf);
+
+            vis[vtx] = true;
+            for(int[] e : graph[vtx]){
+                if(!vis[e[0]] && e[1] + wsf < dis[e[0]]){
+                    dis[e[0]] = e[1] + wsf;
+                    que.add(new int[] {e[0], e[1] + wsf});
+                }
+            }
+        }
+
+        if(noOfEdges != n - 1)
+            return -1;
+
+        return maxValue;
+    }
+
     public static void main(String[] args){
         // hamiltonianCycleandPath(0);
         String A = "parker";
