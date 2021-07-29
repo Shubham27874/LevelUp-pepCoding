@@ -861,6 +861,50 @@ public class l002 {
         return maxValue;
     }
 
+    //Leetcode 1192
+    //error
+    int[] dis, low;
+    boolean[] vis;
+    int time = 0;
+    List<List<Integer>> res;
+    public void dfs(int src, int par, int n, List<Integer>[] graph){
+        dis[src] = low[src] = time++;
+        vis[src] = true;
+
+        for(Integer nbr : graph[src]){
+            if(!vis[src]){
+                dfs(nbr, src, n, graph);
+
+                if(dis[src] < low[nbr])
+                    res.get(src).add(nbr);
+
+                low[src] = Math.min(low[src], low[nbr]);
+
+            } else if(nbr != par)
+                low[src] = Math.min(low[src], dis[nbr]);
+        }
+    }
+
+    public List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+        List<Integer>[] graph = new ArrayList[n];
+        for(List<Integer> ar : connections){
+            graph[ar.get(0)].add(ar.get(1));
+            graph[ar.get(1)].add(ar.get(0));
+        }
+
+        dis = new int[n];
+        low = new int[n];
+        vis = new boolean[n];
+
+        res = new ArrayList<>();
+        for(int i =0 ; i < n; i++){
+            res.add(i, new ArrayList<>());
+        }
+
+        dfs(0, -1, n, graph);
+        return res;
+    }
+
     public static void main(String[] args){
         // hamiltonianCycleandPath(0);
         String A = "parker";
