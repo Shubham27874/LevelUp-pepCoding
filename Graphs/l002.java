@@ -905,6 +905,28 @@ public class l002 {
         return res;
     }
 
+    //Leetcode 747
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
+        int[] dis = new int[n];
+        Arrays.fill(dis, (int) 1e9);
+        dis[src] = 0;
+
+        for (int EdgeCount = 1; EdgeCount <= K + 1; EdgeCount++) {
+            int[] ndis = new int[n];
+            for (int i = 0; i < n; i++)
+                ndis[i] = dis[i];
+
+            for (int[] e : flights) {
+                int u = e[0], v = e[1], w = e[2];
+                if (dis[u] != (int) 1e9 && dis[u] + w < ndis[v])
+                    ndis[v] = dis[u] + w;
+            }
+
+            dis = ndis;
+        }
+
+        return dis[dst] != (int) 1e9 ? dis[dst] : -1;
+    }
     public static void main(String[] args){
         // hamiltonianCycleandPath(0);
         String A = "parker";
