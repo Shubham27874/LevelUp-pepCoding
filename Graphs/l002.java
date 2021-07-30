@@ -926,7 +926,53 @@ public class l002 {
         }
 
         return dis[dst] != (int) 1e9 ? dis[dst] : -1;
+    }   
+
+    //Leetcode 924
+    public int minMalwareSpread(int[][] graph, int[] initial) {
+        int n = graph.length;
+        size = new int[n];    
+        par = new int[n];
+
+        for(int i = 0; i < n; i++){
+            size[i] = 1;
+            par[i] = i;
+        }
+
+        Arrays.sort(initial);
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++){
+                if(i != j && graph[i][j] == 1){
+                    int p1 = findPar_(i);
+                    int p2 = findPar_(j);
+
+                    if(p1 != p2){
+                        par[p1] = p2;
+                        size[p2] += size[p1];
+                    }
+                }
+            }
+        }
+
+        int[] infectedNodeInCity = new int[n];
+        for(int i : initial){
+            int leader = findPar_(i);
+            infectedNodeInCity[leader]++;
+        }
+
+        int ans = initial[0];
+        int maxPopulatedCity = 0;
+        for(int i : initial){
+            int noOfNodesInfected = infectedNodeInCity[findPar_(i)];
+            if(noOfNodesInfected == 1 && size[findPar_(i)] > maxPopulatedCity){
+                maxPopulatedCity = size[findPar_(i)];
+                ans = i;
+            }
+        }
+
+        return ans;
     }
+
     public static void main(String[] args){
         // hamiltonianCycleandPath(0);
         String A = "parker";
