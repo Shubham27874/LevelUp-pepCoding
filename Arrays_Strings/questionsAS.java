@@ -918,3 +918,58 @@ public class questionsAS {
        System.out.println(kadanesAlgo(arr));
     }
 }
+
+
+
+
+
+
+
+// C++ program to find the count of
+// all unique sub-strings with
+// non-repeating characters
+
+#include <bits/stdc++.h>
+using namespace std;
+
+// Function to count all unique
+// distinct character substrings
+int distinctSubstring(string s)
+{
+	// Hashmap to store all substrings
+	unordered_set<string> str;
+s
+	for (int i = 0; i < s.length(); ++i) {
+
+		vector<bool> freq(26, false);
+
+		string a;
+
+		for (int j = i; j < s.length(); ++j) {
+
+			int pos = s[j] - 'a';
+
+			if (freq[pos] == true)
+				break;
+
+			freq[pos] = true;
+
+			a += s[j];
+
+			str.insert(a);
+		}
+	}
+
+	return str.size();
+}
+
+// Driver code
+int main()
+{
+	string S = "abba";
+	int N = S.length();
+
+	cout << distinctSubstring(S, N);
+
+	return 0;
+}
